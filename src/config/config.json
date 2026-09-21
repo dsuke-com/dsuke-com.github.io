@@ -1,39 +1,65 @@
 {
   "site": {
-    "title": "Bookworm Light Astro | Blog Template",
-    "base_url": "https://bookworm-light-astro.vercel.app",
+    "title": "dsuke.com",
+    "base_url": "https://dsuke-com.github.io",
     "base_path": "/",
     "trailing_slash": false,
     "favicon": "/images/favicon.png",
-    "logo": "/images/logo.png",
+    "logo": "",
     "logo_width": "200",
     "logo_height": "34",
-    "logo_text": "Bookworm Light"
+    "logo_text": "dsuke.com"
   },
-
   "settings": {
     "pagination": 5
   },
-
   "metadata": {
-    "meta_author": "Themefisher",
+    "meta_author": "dsuke",
     "meta_image": "/images/og-image.png",
-    "meta_description": "Bookworm Light Astro Blog Template"
+    "meta_description": "古いマンションの住環境と寒さ対策について、実際に試して分かったことを記録しています。"
   },
-
   "google_tag_manager": {
-    "enable": true,
-    "gtm_id": "GTM-XXXXXX"
+    "enable": false,
+    "gtm_id": ""
   },
-
   "params": {
-    "contact_form_action": "#",
-    "copyright": "Copyright © 2026 a theme by [Themefisher](https://themefisher.com)"
+    "copyright": "© 2026 dsuke.com"
   },
-
+  "pickup": [
+    {
+      "title": "窓・サッシの断熱",
+      "description": "冷気の入口として最初に確認したい場所",
+      "url": "/tags/窓",
+      "icon": "window"
+    },
+    {
+      "title": "断熱の考え方",
+      "description": "どこを断熱すると効くのかを整理する",
+      "url": "/tags/断熱",
+      "icon": "layers"
+    },
+    {
+      "title": "マンション特有の条件",
+      "description": "管理規約や構造による制約を踏まえる",
+      "url": "/tags/マンション",
+      "icon": "building"
+    },
+    {
+      "title": "寒さ対策のまとめ",
+      "description": "原因の切り分けから対策までの全体像",
+      "url": "/categories/寒さ対策",
+      "icon": "thermometer"
+    }
+  ],
+  "featured_posts": [
+    "article-01-old-condo-cold-causes"
+  ],
+  "author": {
+    "name": "dsuke",
+    "image": "",
+    "description": "古いマンションの住環境について、自分で試して分かったことを記録しています。"
+  },
   "contactinfo": {
-    "address": "355 S Grand Ave <br/> Los Angeles, CA 90071",
-    "email": "info@bookworm.org",
-    "phone": "+800 567 1234"
+    "email": "hndfavodaismi@gmail.com"
   }
 }

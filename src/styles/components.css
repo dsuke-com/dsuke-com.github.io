@@ -27,14 +27,6 @@
   }
 }
 
-/* author-image */
-.author-image {
-  @apply mr-2 align-top;
-  img {
-    @apply max-h-[25px] max-w-[25px] rounded-full;
-  }
-}
-
 /* social icon style */
 .social-icons {
   @apply space-x-4;
@@ -190,4 +182,31 @@
 /* footer */
 footer p a {
   @apply transition-all duration-200 hover:text-white;
+}
+
+/* Markdown の表: 狭い画面では列を潰さず横スクロールさせる
+   （rehype-table-wrapper.mjs が table を .table-wrapper で包む） */
+.content .table-wrapper {
+  margin-block: 1.5rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.content .table-wrapper > table {
+  /* 3列の日本語が単語単位で折り返されない最低幅 */
+  min-width: 34rem;
+  margin-block: 0;
+}
+
+/* 記事本文の見出し：h2 は左に色帯、h3 は下線で階層を出す */
+.content h2 {
+  border-left: 5px solid var(--color-primary);
+  padding-left: 0.875rem;
+  line-height: 1.55;
+}
+
+.content h3 {
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.625rem;
+  line-height: 1.6;
 }

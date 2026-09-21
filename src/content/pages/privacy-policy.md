@@ -1,30 +1,75 @@
 ---
-title: "Privacy"
-meta_title: ""
-description: "this is meta description"
+title: "プライバシーポリシー"
+meta_title: "プライバシーポリシー"
+description: "dsuke.com における個人情報の取り扱い、アクセス解析ツールの利用、アフィリエイトプログラムの参加について記載しています。"
 draft: false
 ---
 
-#### Responsibility of Contributors
+当サイト（dsuke.com）における個人情報の取り扱い、およびアクセス解析ツールと広告配信の利用について、以下のとおり定めます。
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Purus, donec nunc eros, ullamcorper id feugiat quisque aliquam sagittis. Sem turpis sed viverra massa gravida pharetra. Non dui dolor potenti eu dignissim fusce. Ultrices amet, in curabitur a arcu a lectus morbi id. Iaculis erat sagittis in tortor cursus. Molestie urna eu tortor, erat scelerisque eget. Nunc hendrerit sed interdum lacus. Lorem quis viverra sed
+## 運営者
 
-pretium, aliquam sit. Praesent elementum magna amet, tincidunt eros, nibh in leo. Malesuada purus, lacus, at aliquam suspendisse tempus. Quis tempus amet, velit nascetur sollicitudin. At sollicitudin eget amet in. Eu velit nascetur sollicitudin erhdfvssfvrgss eget viverra nec elementum. Lacus, facilisis tristique lectus in.
+| 項目 | 内容 |
+|---|---|
+| サイト名 | dsuke.com |
+| 運営者 | dsuke |
+| 連絡先 | hndfavodaismi@gmail.com |
 
-#### Gathering of Personal Information
+## 取得する情報
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Purus, donec nunc eros, ullamcorper id feugiat quisque aliquam sagittis. Sem turpis sed viverra massa gravida pharetra. Non dui dolor potenti eu dignissim fusce. Ultrices amet, in curabitur a arcu a lectus morbi id. Iaculis erat sagittis in tortor cursus. Molestie urna eu tortor, erat scelerisque eget. Nunc hendrerit sed interdum lacus. Lorem quis viverra sed
+### お問い合わせによって取得する情報
 
-#### Protection of Personal- Information
+お問い合わせいただいた際に、メールアドレスおよびご記入いただいた内容を取得します。これらは返信および内容の確認のためにのみ利用し、ご本人の同意なく第三者に提供することはありません。
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Purus, donec nunc eros, ullamcorper id feugiat quisque aliquam sagittis. Sem turpis sed viverra massa gravida pharetra. Non dui dolor potenti eu dignissim fusce. Ultrices amet, in curabitur a arcu a lectus morbi id. Iaculis erat sagittis in tortor cursus.
+### アクセス情報
 
-Molestie urna eu tortor, erat scelerisque eget. Nunc hendrerit sed interdum lacus. Lorem quis viverra sed
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Purus, donec nunc eros, ullamcorper id feugiat
+当サイトでは、閲覧状況を把握するために以下の情報を自動的に取得します。これらの情報に氏名や住所などは含まれず、個人を特定するものではありません。
 
-#### Privacy Policy Changes
+- 閲覧したページのURL
+- 参照元のURL
+- ブラウザの種類とバージョン
+- OSの種類
+- 画面サイズ
+- おおよその地域
+- 訪問日時
 
-1. Sll the Themefisher items are designed to be with the latest , We check all
-2. comments that threaten or harm the reputation of any person or organization
-3. personal information including, but limited to, email addresses, telephone numbers
-4. Any Update come in The technology Customer will get automatic Notification.
+## アクセス解析ツールについて
+
+当サイトでは、アクセス状況の把握と内容の改善のために Google LLC が提供する Google アナリティクスを利用しています。
+
+Google アナリティクスはCookieを使用して情報を収集します。収集される情報は前項に記載したもので、個人を特定するものではありません。
+
+Cookieによる収集を無効にしたい場合は、以下のいずれかの方法で拒否できます。
+
+- ブラウザの設定でCookieを無効にする
+- Google が提供する[Google アナリティクス オプトアウト アドオン](https://tools.google.com/dlpage/gaoptout?hl=ja)を導入する
+
+Google によるデータの取り扱いについては、[Google のプライバシーポリシー](https://policies.google.com/privacy?hl=ja)および[Google が広告やパートナーのサイトやアプリからの情報を使用する方法](https://policies.google.com/technologies/partner-sites?hl=ja)をご確認ください。
+
+## 広告・アフィリエイトプログラムについて
+
+当サイトは、アフィリエイトプログラムに参加しており、記事内に広告を含むリンクを掲載する場合があります。読者が当サイトのリンクを経由して商品を購入した場合、当サイトが販売事業者から紹介料を受け取ることがあります。
+
+広告を含むリンクについては、該当する記事内で広告であることを明記します。
+
+広告配信事業者はCookieを使用して、ユーザーの過去の閲覧履歴に基づいた広告を表示する場合があります。Cookieの利用を無効にしたい場合は、ブラウザの設定から変更できます。
+
+なお、紹介料の有無が商品の評価内容に影響しないよう努めていますが、掲載内容は運営者個人の見解であり、商品の性能や効果を保証するものではありません。
+
+## 免責事項
+
+当サイトに掲載する情報は、作成時点で正確であるよう努めていますが、内容の正確性および完全性を保証するものではありません。
+
+住宅の断熱や設備に関する記事については、住戸の構造、築年数、管理規約、賃貸契約の内容によって、実施できる対策や結果が異なります。記載した方法を試した結果について、当サイトは責任を負いません。窓の交換や内窓の設置など建物に手を加える工事を検討される場合は、管理組合の規約を確認し、専門業者にご相談ください。
+
+当サイトからリンクした外部サイトの内容およびサービスについて、当サイトは責任を負いません。
+
+## 著作権
+
+当サイトに掲載している文章および画像の著作権は、運営者または各権利者に帰属します。引用の範囲を超えた転載を希望される場合は、事前に連絡先までご連絡ください。
+
+## 本ポリシーの変更
+
+本ポリシーの内容は、法令の変更や当サイトの運用の変更に応じて、予告なく改定する場合があります。改定後の内容は当ページに掲載した時点から適用されます。
+
+最終更新日：2026年9月21日

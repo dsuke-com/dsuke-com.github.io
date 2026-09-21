@@ -7,6 +7,7 @@ import AutoImport from "astro-auto-import";
 import gtm from "astro-gtm-lite";
 import { defineConfig, fontProviders, sharpImageService } from "astro/config";
 import config from "./src/config/config.json";
+import rehypeTableWrapper from "./src/lib/rehype/rehype-table-wrapper.mjs";
 import theme from "./src/config/theme.json";
 
 // Helper to parse font string format: "FontName:wght@400;500;600;700"
@@ -64,6 +65,11 @@ export default defineConfig({
         "@/shortcodes/Youtube",
         "@/shortcodes/Tabs",
         "@/shortcodes/Tab",
+        "@/shortcodes/Steps.astro",
+        "@/shortcodes/Voice.astro",
+        "@/shortcodes/Ranking.astro",
+        "@/shortcodes/Item.astro",
+        "@/shortcodes/Warning.astro",
       ],
     }),
     mdx(),
@@ -74,7 +80,7 @@ export default defineConfig({
     }),
   ],
   markdown: {
-    processor: unified(),
+    processor: unified({ rehypePlugins: [rehypeTableWrapper] }),
     shikiConfig: { theme: "one-dark-pro", wrap: true },
   },
 });

@@ -1,55 +1,120 @@
 ---
 import config from "@/config/config.json";
-import {
-  IoLogoFacebook,
-  IoLogoLinkedin,
-  IoLogoPinterest,
-  IoLogoTwitter,
-} from "react-icons/io5";
+
+type Props = {
+  title?: string;
+  description?: string;
+  className?: string;
+  // "full" は冒頭・末尾の大きめのボタン列、"compact" はタグ横などの小さい表示
+  variant?: "full" | "compact";
+  heading?: string;
+};
+
+const {
+  title,
+  description,
+  className = "",
+  variant = "full",
+  heading,
+} = Astro.props;
 
 const { base_url } = config.site;
-const { title, description, slug, className } = Astro.props;
+
+// 共有対象は「今表示しているページ」そのもの。
+// 以前は `${base_url}/${slug}` としており /blog/ が欠落して 404 になっていた。
+const shareUrl = new URL(Astro.url.pathname, base_url).href;
+
+// タイトルや説明文には ｜ ・ 。 & などが含まれるため、必ずエンコードして渡す
+const e = encodeURIComponent;
+const q = {
+  url: e(shareUrl),
+  title: e(title ?? ""),
+  description: e(description ?? ""),
+  site: e(base_url),
+};
+
+const services = [
+  {
+    name: "X",
+    label: "X でポストする",
+    href: `https://twitter.com/intent/tweet/?text=${q.title}&url=${q.url}`,
+    bg: "#152035",
+  },
+  {
+    name: "Facebook",
+    label: "Facebook で共有する",
+    href: `https://www.facebook.com/sharer/sharer.php?u=${q.url}`,
+    bg: "#2c4a86",
+  },
+  {
+    name: "はてブ",
+    label: "はてなブックマークに追加する",
+    href: `https://b.hatena.ne.jp/entry/panel/?url=${q.url}&title=${q.title}`,
+    bg: "#00558a",
+  },
+  {
+    name: "LINE",
+    label: "LINE で送る",
+    href: `https://social-plugins.line.me/lineit/share?url=${q.url}`,
+    bg: "#05892f",
+  },
+];
+
+const compact = variant === "compact";
 ---
 
-<ul class={`${className}`}>
-  <li class="inline-block">
-    <a
-      aria-label="facebook share button"
-      href={`https://facebook.com/sharer/sharer.php?u=${base_url}/${slug}`}
-      target="_blank"
-      rel="noreferrer noopener"
-    >
-      <IoLogoFacebook />
-    </a>
-  </li>
-  <li class="inline-block">
-    <a
-      aria-label="twitter share button"
-      href={`https://twitter.com/intent/tweet/?text=${title}&amp;url=${base_url}/${slug}`}
-      target="_blank"
-      rel="noreferrer noopener"
-    >
-      <IoLogoTwitter />
-    </a>
-  </li>
-  <li class="inline-block">
-    <a
-      aria-label="linkedin share button"
-      href={`https://www.linkedin.com/shareArticle?mini=true&url=${base_url}/${slug}&title=${title}&summary=${description}&source=${base_url}`}
-      target="_blank"
-      rel="noreferrer noopener"
-    >
-      <IoLogoLinkedin />
-    </a>
-  </li>
-  <li class="inline-block">
-    <a
-      aria-label="pinterest share button"
-      href={`https://pinterest.com/pin/create/button/?url=${base_url}/${slug}&media=&description=${description}`}
-      target="_blank"
-      rel="noreferrer noopener"
-    >
-      <IoLogoPinterest />
-    </a>
-  </li>
-</ul>
+<div class={className}>
+  {
+    heading && (
+      <p class="mb-3 text-sm font-bold tracking-wide text-text">{heading}</p>
+    )
+  }
+  <ul class="flex flex-wrap gap-2">
+    {
+      services.map((s) => (
+        <li>
+          <a
+            href={s.href}
+            aria-label={s.label}
+            target="_blank"
+            rel="noreferrer noopener"
+            class={`flex min-h-[44px] items-center rounded-md font-bold text-white transition duration-300 hover:opacity-85 ${compact ? "px-3 text-xs" : "px-4 text-sm"}`}
+            style={{ backgroundColor: s.bg }}
+          >
+            {s.name}
+          </a>
+        </li>
+      ))
+    }
+    <li>
+      <button
+        type="button"
+        data-copy-url={shareUrl}
+        class={`copy-link flex min-h-[44px] items-center rounded-md border border-border bg-white font-bold text-text-dark transition duration-300 hover:border-primary hover:text-primary ${compact ? "px-3 text-xs" : "px-4 text-sm"}`}
+      >
+        <span class="copy-link-label">リンクをコピー</span>
+      </button>
+    </li>
+  </ul>
+</div>
+
+<script>
+  // 「リンクをコピー」— クリップボードが使えない環境では何もしない
+  document.querySelectorAll<HTMLButtonElement>(".copy-link").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const url = btn.dataset.copyUrl;
+      const label = btn.querySelector(".copy-link-label");
+      if (!url || !label || !navigator.clipboard) return;
+      try {
+        await navigator.clipboard.writeText(url);
+        const before = label.textContent;
+        label.textContent = "コピーしました";
+        setTimeout(() => {
+          label.textContent = before;
+        }, 2000);
+      } catch {
+        // 権限がない場合などは黙って無視する
+      }
+    });
+  });
+</script>

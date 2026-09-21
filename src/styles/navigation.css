@@ -3,6 +3,10 @@
   @apply relative flex max-w-[1260px] flex-wrap items-center justify-between;
 }
 
+.navbar-brand {
+  @apply text-xl font-bold text-dark transition hover:text-primary;
+}
+
 .navbar-brand img {
   @apply h-auto max-w-[170px] sm:h-auto sm:max-w-full;
 }
@@ -16,7 +20,7 @@
 }
 
 .nav-link {
-  @apply p-3 text-lg font-semibold text-dark transition hover:text-primary md:p-4;
+  @apply p-3 text-base font-semibold text-dark transition hover:text-primary md:p-4;
 }
 
 .nav-dropdown-list {

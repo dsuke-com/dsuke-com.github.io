@@ -1,0 +1,78 @@
+---
+// 注意喚起のボックス。
+// 使い方（.mdx）:
+//   <Warning title="賃貸の場合の注意">
+//     断熱シートは、網入りガラスなどで使用できない商品があります。
+//   </Warning>
+type Props = {
+  title?: string;
+};
+
+const { title = "注意" } = Astro.props;
+---
+
+<div class="warning">
+  <div class="warning-head">
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#8a6a00"
+      stroke-width="2.2"
+      stroke-linecap="round"
+      aria-hidden="true"
+      class="warning-icon"
+    >
+      <path d="M12 3l9.5 17H2.5z"></path>
+      <path d="M12 9v5"></path>
+      <path d="M12 17.5v.2"></path>
+    </svg>
+    <p class="warning-title">{title}</p>
+  </div>
+  <div class="warning-body"><slot /></div>
+</div>
+
+<style>
+  .warning {
+    margin-block: 2rem;
+    border: 1px solid #e8c96a;
+    border-left: 5px solid #e0a500;
+    border-radius: 0.5rem;
+    background-color: #fffbef;
+    padding: 1.0625rem 1.25rem;
+  }
+
+  .warning-head {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .warning-icon {
+    flex-shrink: 0;
+  }
+
+  .warning-title {
+    margin: 0;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #6b5310;
+  }
+
+  .warning-body :global(p) {
+    margin-block: 0;
+    font-size: 0.9375rem;
+    line-height: 1.85;
+    color: #4a4231;
+  }
+
+  .warning-body :global(p + p) {
+    margin-top: 0.75rem;
+  }
+
+  .warning-body :global(a) {
+    color: #7c4a00;
+  }
+</style>

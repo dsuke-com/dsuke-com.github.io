@@ -1,6 +1,9 @@
 ---
 import Logo from "@/components/Logo.astro";
+import Social from "@/components/Social.astro";
+import config from "@/config/config.json";
 import menu from "@/config/menu.json";
+import social from "@/config/social.json";
 import { IoSearch } from "react-icons/io5";
 
 export interface ChildNavigationLink {
@@ -16,85 +19,127 @@ export interface NavigationLink {
 }
 
 const { main }: { main: NavigationLink[] } = menu;
+const hasSocial = Array.isArray(social.main) && social.main.length > 0;
 ---
 
-<header class="header pt-6">
-  <nav class="navbar container">
-    <!-- logo -->
-    <div class="order-0">
-      <Logo />
-    </div>
-    <!-- navbar toggler -->
-    <input id="nav-toggle" type="checkbox" class="hidden" />
-    <label
-      id="show-button"
-      for="nav-toggle"
-      class="order-2 flex cursor-pointer items-center text-black md:order-1 md:hidden"
-    >
-      <svg class="h-6 fill-current" viewBox="0 0 20 20">
-        <title>Menu Open</title>
-        <path d="M0 3h20v2H0V3z m0 6h20v2H0V9z m0 6h20v2H0V0z"></path>
-      </svg>
-    </label>
-    <label
-      id="hide-button"
-      for="nav-toggle"
-      class="order-2 hidden cursor-pointer items-center text-black md:order-1"
-    >
-      <svg class="h-6 fill-current" viewBox="0 0 20 20">
-        <title>Menu Close</title>
-        <polygon
-          points="11 9 22 9 22 11 11 11 11 22 9 22 9 11 -2 11 -2 9 9 9 9 -2 11 -2"
-          transform="rotate(45 10 10)"></polygon>
-      </svg>
-    </label>
-    <!-- /navbar toggler -->
+<header class="header">
+  {/* 上部のSNSバー：アカウントが設定されているときだけ出す */}
+  {
+    hasSocial && (
+      <div class="hidden border-b border-border md:block">
+        <div class="container">
+          <Social
+            source={social.main}
+            className="flex items-center justify-center gap-1 py-2 text-text"
+          />
+        </div>
+      </div>
+    )
+  }
 
-    <ul
-      id="nav-menu"
-      class="navbar-nav order-3 hidden w-full md:order-1 md:flex md:w-auto"
-    >
-      {
-        main.map((menu) => (
-          <>
-            {menu.hasChildren ? (
-              <li class="nav-item nav-dropdown group relative cursor-pointer">
-                <span class="nav-link inline-flex items-center">
-                  {menu.name}
-                  <svg class="h-5 w-5 fill-current" viewBox="0 0 20 20">
-                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                  </svg>
-                </span>
-                <ul class="nav-dropdown-list hidden group-hover:block md:invisible md:absolute md:block md:opacity-0 md:group-hover:visible md:group-hover:opacity-100">
-                  {menu.children?.map((child) => (
-                    <li class="nav-dropdown-item">
-                      <a href={child.url} class="nav-dropdown-link">
-                        {child.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ) : (
-              <li class="nav-item">
-                <a href={menu.url} class="nav-link block">
-                  {menu.name}
-                </a>
-              </li>
-            )}
-          </>
-        ))
-      }
-    </ul>
-    <div class="order-1 ml-auto flex md:order-2 md:ml-0">
-      <a
-        class="mr-4 inline-block cursor-pointer p-2 text-xl text-dark transition hover:text-primary md:mr-0"
-        href="/search"
-        title="seach"
-        aria-label="seach"
+  {/* ロゴ：md以上では中央に置き、説明文を添える */}
+  <div class="hidden flex-col items-center gap-2 py-7 md:flex">
+    <Logo />
+    <p class="text-sm text-text">{config.metadata.meta_description}</p>
+  </div>
+
+  {/* メニュー帯 */}
+  <div class="md:border-y md:border-border md:bg-light">
+    <nav class="navbar container md:justify-center">
+      {/* 以下 4 要素の兄弟関係は safe.css の開閉に必要なため崩さない */}
+      <input id="nav-toggle" type="checkbox" class="hidden" />
+
+      {/* モバイル用ロゴ */}
+      <div class="order-0 py-4 md:hidden">
+        <Logo />
+      </div>
+
+      <label
+        id="show-button"
+        for="nav-toggle"
+        class="order-2 flex cursor-pointer items-center text-black md:order-1 md:hidden"
       >
-        <IoSearch />
-      </a>
-    </div>
-  </nav>
+        <svg class="h-6 fill-current" viewBox="0 0 20 20">
+          <title>メニューを開く</title>
+          <path d="M0 3h20v2H0V3z m0 6h20v2H0V9z m0 6h20v2H0V0z"></path>
+        </svg>
+      </label>
+      <label
+        id="hide-button"
+        for="nav-toggle"
+        class="order-2 hidden cursor-pointer items-center text-black md:order-1"
+      >
+        <svg class="h-6 fill-current" viewBox="0 0 20 20">
+          <title>メニューを閉じる</title>
+          <polygon
+            points="11 9 22 9 22 11 11 11 11 22 9 22 9 11 -2 11 -2 9 9 9 9 -2 11 -2"
+            transform="rotate(45 10 10)"></polygon>
+        </svg>
+      </label>
+
+      <ul
+        id="nav-menu"
+        class="navbar-nav order-3 hidden w-full md:order-1 md:flex md:w-auto md:items-center md:justify-center"
+      >
+        {
+          main.map((item) => (
+            <>
+              {item.hasChildren ? (
+                <li class="nav-item nav-dropdown group relative cursor-pointer">
+                  <span class="nav-link inline-flex items-center">
+                    {item.name}
+                    <svg
+                      class="h-5 w-5 fill-current"
+                      viewBox="0 0 20 20"
+                      aria-hidden="true"
+                    >
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                  </span>
+                  <ul class="nav-dropdown-list hidden group-hover:block md:invisible md:absolute md:block md:opacity-0 md:group-hover:visible md:group-hover:opacity-100">
+                    {item.children?.map((child) => (
+                      <li class="nav-dropdown-item">
+                        <a href={child.url} class="nav-dropdown-link">
+                          {child.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ) : (
+                <li class="nav-item">
+                  <a href={item.url} class="nav-link block">
+                    {item.name}
+                  </a>
+                </li>
+              )}
+            </>
+          ))
+        }
+        {/* 検索：md以上ではメニューの末尾に並べる */}
+        <li class="nav-item hidden md:block">
+          <a
+            href="/search"
+            title="記事を検索"
+            aria-label="記事を検索"
+            class="nav-link flex items-center"
+          >
+            <IoSearch />
+          </a>
+        </li>
+      </ul>
+
+      {/* 検索：モバイルではハンバーガーの隣に出す */}
+      <div class="order-1 ml-auto flex md:hidden">
+        <a
+          class="inline-block cursor-pointer p-2 text-xl text-dark transition hover:text-primary"
+          href="/search"
+          title="記事を検索"
+          aria-label="記事を検索"
+        >
+          <IoSearch />
+        </a>
+      </div>
+    </nav>
+  </div>
 </header>

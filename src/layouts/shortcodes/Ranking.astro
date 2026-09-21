@@ -1,0 +1,125 @@
+---
+// おすすめ順のランキング。
+// 使い方（.mdx）:
+//   <Ranking title="効果が高い順" items={[
+//     { name: "窓用の断熱シート", price: "1,000〜2,500円" },
+//     { name: "厚手・床まで届くカーテン", price: "3,000〜8,000円", href: "/blog/xxx" },
+//   ]} />
+type Item = {
+  name: string;
+  price?: string;
+  href?: string;
+};
+
+type Props = {
+  title?: string;
+  items: Item[];
+};
+
+const { title = "おすすめ順", items } = Astro.props;
+
+// 1〜3位は色を変え、4位以降は共通の色にする
+const rankColors = ["#c9a227", "#9aa0a6", "#b08152"];
+---
+
+<div class="ranking">
+  <p class="ranking-title">＼ {title} ／</p>
+  <ol class="ranking-list">
+    {
+      items.map((item, i) => (
+        <li class="ranking-item">
+          <span
+            aria-hidden="true"
+            class="ranking-badge"
+            style={{ backgroundColor: rankColors[i] ?? "var(--color-dark)" }}
+          >
+            {i + 1}
+          </span>
+          <span class="ranking-name">
+            {item.href ? (
+              <a href={item.href} class="ranking-link">
+                {item.name}
+              </a>
+            ) : (
+              item.name
+            )}
+          </span>
+          {item.price && <span class="ranking-price">{item.price}</span>}
+        </li>
+      ))
+    }
+  </ol>
+</div>
+
+<style>
+  .ranking {
+    margin-block: 2rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  .ranking-title {
+    margin: 0;
+    background-color: var(--color-dark);
+    padding: 0.75rem 1.125rem;
+    text-align: center;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .ranking-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ranking-item {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.9375rem 1.125rem;
+    line-height: 1.6;
+  }
+
+  .ranking-item + .ranking-item {
+    border-top: 1px solid var(--color-border);
+  }
+
+  .ranking-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .ranking-name {
+    flex-grow: 1;
+    font-weight: 700;
+    color: var(--color-text-dark);
+  }
+
+  .ranking-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .ranking-link:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+
+  .ranking-price {
+    flex-shrink: 0;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--color-text);
+  }
+</style>

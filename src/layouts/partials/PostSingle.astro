@@ -1,133 +1,124 @@
 ---
+import AuthorBox from "@/components/AuthorBox.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
 import Share from "@/components/Share.astro";
 import SimilarPosts from "@/components/SimilarPosts.astro";
+import TableOfContents from "@/components/TableOfContents.astro";
+import config from "@/config/config.json";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import dateFormat from "@/lib/utils/dateFormat";
 import similerItems from "@/lib/utils/similarItems";
 import { humanize, markdownify, slugify } from "@/lib/utils/textConverter";
 import { Image } from "astro:assets";
 import { render } from "astro:content";
-import { BiCalendarEdit, BiCategoryAlt } from "react-icons/bi";
 
-const allAuthors = await getSinglePage("authors");
 const posts = await getSinglePage("posts");
 const { post } = Astro.props;
-const similarPosts = similerItems(post, posts, post.slug);
-const { Content } = await render(post);
-const { title, description, authors, categories, image, date, tags } =
+const similarPosts = similerItems(post, posts, post.id);
+const { Content, headings } = await render(post);
+const { title, description, categories, image, date, tags, updated } =
   post.data;
 ---
 
 <section class="section">
   <div class="container">
     <article class="row justify-center">
-      <div class="md:col-10 text-center">
-        <h1 set:html={markdownify(title)} class="h2" />
-        <ul class="mt-4 flex flex-wrap items-center justify-center text-text">
-          <li class="mx-3">
-            {
-              allAuthors
-                .filter((author) =>
-                  authors
-                    .map((author: string) => slugify(author))
-                    .includes(slugify(author.data.title))
-                )
-                .map((author) => (
-                  <a
-                    href={`/authors/${slugify(author.id)}`}
-                    class="flex items-center hover:text-primary font-medium"
-                  >
-                    {author.data.image && (
-                      <Image
-                        src={author.data.image}
-                        alt={author.data.title}
-                        height={50}
-                        width={50}
-                        class="mr-2 h-6 w-6 rounded-full"
-                      />
-                    )}
-                    <span>{author.data.title}</span>
-                  </a>
-                ))
-            }
-          </li>
-          <li class="mx-3 flex items-center flex-wrap font-medium">
-            <BiCalendarEdit className="mr-1 h-5 w-5 text-gray-600" />
-            {dateFormat(date)}
-          </li>
-          <li class="mx-3 flex items-center flex-wrap">
-            <BiCategoryAlt className="mr-1 h-[18px] w-[18px] text-gray-600" />
+      <div class="md:col-10 lg:col-8">
+        <Breadcrumb category={categories[0]} className="mb-5" />
 
-            <ul>
-              {
-                categories.map((category: string, i: number) => (
-                  <li class="inline-block">
-                    <a
-                      href={`/categories/${slugify(category)}`}
-                      class="mr-2 hover:text-primary font-medium"
-                    >
-                      {humanize(category)}
-                      {i !== post.data.categories.length - 1 && ","}
-                    </a>
-                  </li>
-                ))
-              }
-            </ul>
-          </li>
-        </ul>
-      </div>
+        <h1 set:html={markdownify(title)} class="h2 mb-5 leading-normal" />
 
-      <div class="col-12 mt-8 mb-2">
+        <!-- メタ情報：著者・公開日・更新日 -->
+        <div
+          class="mb-5 flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-border pb-5 text-sm text-text"
+        >
+          <span class="flex items-center gap-2">
+            <span
+              aria-hidden="true"
+              class="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-xs font-bold text-white"
+              >{config.author.name.slice(0, 1)}</span
+            >
+            <span class="font-semibold text-text-dark"
+              >{config.author.name}</span
+            >
+          </span>
+          <span aria-hidden="true" class="text-text-light">·</span>
+          <span>公開 {dateFormat(date)}</span>
+          {
+            updated && (
+              <>
+                <span aria-hidden="true" class="text-text-light">
+                  ·
+                </span>
+                <span>更新 {dateFormat(updated)}</span>
+              </>
+            )
+          }
+        </div>
+
+        <Share
+          className="mb-8"
+          title={title}
+          description={description}
+          variant="compact"
+        />
+
         {
           image && (
-            <Image
-              src={image}
-              height={500}
-              width={1000}
-              alt={title}
-              class="rounded-lg"
-            />
+            <div class="mb-8">
+              <Image
+                src={image}
+                height={500}
+                width={1000}
+                alt={title}
+                class="w-full rounded-lg"
+              />
+            </div>
           )
         }
-      </div>
 
-      <div class="md:col-10">
-        <div class="content mb-16 text-left">
+        <TableOfContents headings={headings} />
+
+        <div class="content mb-12 text-left">
           <Content />
         </div>
-        <div class="flex flex-wrap items-center justify-between">
-          <ul class="mr-4 mb-4 space-x-3">
-            {
-              tags.map((tag: string) => (
-                <li class="inline-block">
+
+        {
+          tags.length > 0 && (
+            <ul class="mb-10 flex flex-wrap gap-3">
+              {tags.map((tag: string) => (
+                <li>
                   <a
                     href={`/tags/${slugify(tag)}`}
-                    class="block rounded-lg bg-light px-4 py-2 font-semibold text-dark text-sm hover:text-primary transition duration-300"
+                    class="block rounded-lg bg-light px-4 py-2 text-sm font-semibold text-dark transition duration-300 hover:text-primary"
                   >
                     #{humanize(tag)}
                   </a>
                 </li>
-              ))
-            }
-          </ul>
-          <Share
-            className="social-share mb-4"
-            title={title}
-            description={description}
-            slug={post.id}
-          />
-        </div>
+              ))}
+            </ul>
+          )
+        }
+
+        <AuthorBox className="mb-10" />
+
+        <Share
+          className="mb-4"
+          title={title}
+          description={description}
+          heading="この記事を共有する"
+        />
       </div>
     </article>
   </div>
 </section>
 
-<!-- similar posts -->
+<!-- あわせて読みたい -->
 {
   similarPosts.length > 0 && (
     <section class="section pt-0">
       <div class="container">
-        <h2 class="mb-8 text-center h3">Similar Posts</h2>
+        <h2 class="h3 mb-8 text-center">あわせて読みたい</h2>
         <SimilarPosts posts={similarPosts.slice(0, 3)} />
       </div>
     </section>

@@ -3,29 +3,103 @@ import Social from "@/components/Social.astro";
 import config from "@/config/config.json";
 import menu from "@/config/menu.json";
 import social from "@/config/social.json";
-import { markdownify } from "@/lib/utils/textConverter";
+import { getTaxonomy } from "@/lib/taxonomyParser.astro";
+import { humanize, markdownify } from "@/lib/utils/textConverter";
+
+const categories = await getTaxonomy("posts", "categories");
+const hasSocial = Array.isArray(social.main) && social.main.length > 0;
+
+// 記事内で参考にしている公的情報。読者が一次情報に当たれるように置く。
+const references = [
+  { name: "環境省「デコ活」", url: "https://ondankataisaku.env.go.jp/" },
+  {
+    name: "東京都保健医療局「結露対策」",
+    url: "https://www.hokeniryo.metro.tokyo.lg.jp/",
+  },
+];
 ---
 
-<footer class="section bg-dark">
-  <div class="container text-center">
-    {/* footer menu */}
-    <ul class="mb-8 space-x-4">
-      {
-        menu.footer.map((menu) => (
-          <li class="inline-block">
-            <a
-              href={menu.url}
-              class="p-4 text-white/75 hover:text-white transition-all"
-            >
-              {menu.name}
-            </a>
-          </li>
-        ))
-      }
-    </ul>
-    {/* social icons */}
-    <Social source={social.main} className="social-icons mb-8" />
-    {/* copyright */}
-    <p set:html={markdownify(config.params.copyright)} class="text-white/75" />
+<footer class="bg-dark">
+  <div class="container">
+    <div class="flex flex-col gap-10 py-14 lg:flex-row lg:justify-between">
+      {/* サイト名と説明 */}
+      <div class="flex max-w-sm flex-col gap-3">
+        <p class="text-xl font-bold text-white">{config.site.title}</p>
+        <p class="leading-relaxed text-white/75">
+          {config.metadata.meta_description}
+        </p>
+        {
+          hasSocial && (
+            <Social
+              source={social.main}
+              className="social-icons mt-2 flex gap-3"
+            />
+          )
+        }
+      </div>
+
+      {/* 3カラムのリンク群 */}
+      <div class="flex flex-wrap gap-x-16 gap-y-10">
+        {
+          categories.length > 0 && (
+            <div class="flex flex-col gap-3">
+              <p class="text-xs font-bold tracking-[0.16em] text-white/50">
+                記事のテーマ
+              </p>
+              {categories.map((category) => (
+                <a
+                  href={`/categories/${category}`}
+                  class="text-white/85 transition hover:text-white"
+                >
+                  {humanize(category ?? "")}
+                </a>
+              ))}
+            </div>
+          )
+        }
+
+        <div class="flex flex-col gap-3">
+          <p class="text-xs font-bold tracking-[0.16em] text-white/50">
+            参考にした情報
+          </p>
+          {
+            references.map((ref) => (
+              <a
+                href={ref.url}
+                target="_blank"
+                rel="noreferrer noopener"
+                class="text-white/85 transition hover:text-white"
+              >
+                {ref.name}
+              </a>
+            ))
+          }
+        </div>
+
+        <div class="flex flex-col gap-3">
+          <p class="text-xs font-bold tracking-[0.16em] text-white/50">
+            このサイトについて
+          </p>
+          {
+            menu.footer.map((item) => (
+              <a
+                href={item.url}
+                class="text-white/85 transition hover:text-white"
+              >
+                {item.name}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+
+    {/* 広告表記とコピーライト */}
+    <div class="flex flex-col gap-2 border-t border-white/15 py-6">
+      <p class="max-w-2xl text-xs leading-relaxed text-white/50">
+        本サイトはアフィリエイトプログラムに参加しており、リンク経由での購入により紹介料を受け取ることがあります。
+      </p>
+      <p set:html={markdownify(config.params.copyright)} class="text-sm text-white/50" />
+    </div>
   </div>
 </footer>

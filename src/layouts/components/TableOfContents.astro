@@ -1,0 +1,135 @@
+---
+import type { MarkdownHeading } from "astro";
+
+type Props = {
+  headings: MarkdownHeading[];
+  className?: string;
+};
+
+const { headings, className = "" } = Astro.props;
+
+// h2 / h3 のみを目次に載せる（h1 は title として別途描画されるため除外）
+const flat = headings.filter(({ depth }) => depth === 2 || depth === 3);
+
+// h2 ごとに h3 をまとめる。h2 より先に h3 が来た場合も落とさずに拾う。
+type Section = { heading: MarkdownHeading | null; children: MarkdownHeading[] };
+const sections: Section[] = [];
+for (const h of flat) {
+  if (h.depth === 2 || sections.length === 0) {
+    sections.push({ heading: h.depth === 2 ? h : null, children: [] });
+    if (h.depth === 3) sections[sections.length - 1].children.push(h);
+  } else {
+    sections[sections.length - 1].children.push(h);
+  }
+}
+---
+
+{
+  flat.length >= 3 && (
+    <nav aria-label="目次" class={`toc ${className}`}>
+      <p class="toc-title">このページの目次</p>
+      <ol class="toc-list">
+        {sections.map((section) => (
+          <li class="toc-item">
+            {section.heading && (
+              <a href={`#${section.heading.slug}`} class="toc-link">
+                {section.heading.text}
+              </a>
+            )}
+            {section.children.length > 0 && (
+              <ul class="toc-sublist">
+                {section.children.map((child) => (
+                  <li class="toc-subitem">
+                    <a href={`#${child.slug}`} class="toc-sublink">
+                      {child.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}
+
+<style>
+  .toc {
+    margin-bottom: 2.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    background-color: var(--color-light);
+    padding: 1.375rem 1.5rem 1.5rem;
+  }
+
+  .toc-title {
+    margin: 0 0 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-text-dark);
+  }
+
+  .toc-list {
+    margin: 0;
+    padding: 0 0 0 1.5rem;
+    counter-reset: toc;
+    list-style: none;
+  }
+
+  .toc-item {
+    counter-increment: toc;
+    line-height: 1.6;
+  }
+
+  .toc-item + .toc-item {
+    margin-top: 0.75rem;
+  }
+
+  .toc-item > .toc-link::before {
+    content: counter(toc, decimal-leading-zero) ". ";
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .toc-link {
+    color: var(--color-text-dark);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .toc-sublist {
+    margin: 0.5rem 0 0;
+    padding: 0 0 0 1rem;
+    list-style: none;
+  }
+
+  .toc-subitem {
+    line-height: 1.6;
+  }
+
+  .toc-subitem + .toc-subitem {
+    margin-top: 0.4375rem;
+  }
+
+  .toc-sublink {
+    font-size: 0.9375rem;
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  /* 子項目は「— 見出し」の形にして階層を示す */
+  .toc-sublink::before {
+    content: "— ";
+    color: var(--color-text-light);
+  }
+
+  .toc-link:hover,
+  .toc-link:focus-visible,
+  .toc-sublink:hover,
+  .toc-sublink:focus-visible {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+</style>

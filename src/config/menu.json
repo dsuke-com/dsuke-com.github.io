@@ -1,60 +1,37 @@
 {
   "main": [
     {
-      "name": "Home",
+      "name": "ホーム",
       "url": "/"
     },
     {
-      "name": "About",
+      "name": "カテゴリー",
+      "url": "/categories"
+    },
+    {
+      "name": "タグ",
+      "url": "/tags"
+    },
+    {
+      "name": "このサイトについて",
       "url": "/about"
     },
     {
-      "name": "Contact",
+      "name": "お問い合わせ",
       "url": "/contact"
-    },
-    {
-      "name": "Pages",
-      "url": "",
-      "hasChildren": true,
-      "children": [
-        {
-          "name": "Authors",
-          "url": "/authors"
-        },
-        {
-          "name": "Categories",
-          "url": "/categories"
-        },
-        {
-          "name": "Tags",
-          "url": "/tags"
-        },
-        {
-          "name": "Elements",
-          "url": "/elements"
-        },
-        {
-          "name": "Privacy Policy",
-          "url": "/privacy-policy"
-        }
-      ]
     }
   ],
   "footer": [
     {
-      "name": "About",
+      "name": "このサイトについて",
       "url": "/about"
     },
     {
-      "name": "Contact",
+      "name": "お問い合わせ",
       "url": "/contact"
     },
     {
-      "name": "Elements",
-      "url": "/elements"
-    },
-    {
-      "name": "Privacy Policy",
+      "name": "プライバシーポリシー",
       "url": "/privacy-policy"
     }
   ]

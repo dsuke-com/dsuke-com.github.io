@@ -1,0 +1,64 @@
+---
+import config from "@/config/config.json";
+import { Image } from "astro:assets";
+
+type Props = {
+  // "inline" は記事末尾、"compact" はサイドバーなどの狭い場所
+  variant?: "inline" | "compact";
+  className?: string;
+};
+
+const { variant = "inline", className = "" } = Astro.props;
+const { name, image, description } = config.author;
+
+const compact = variant === "compact";
+const avatarSize = compact ? 64 : 84;
+---
+
+<aside
+  class={`rounded-lg border border-border bg-light ${compact ? "p-5" : "p-6"} ${className}`}
+>
+  <div
+    class={`flex gap-5 ${compact ? "flex-col items-center text-center" : "items-start"}`}
+  >
+    {
+      image ? (
+        <Image
+          src={image}
+          alt={name}
+          width={avatarSize * 2}
+          height={avatarSize * 2}
+          class="shrink-0 rounded-full object-cover"
+          style={{ width: `${avatarSize}px`, height: `${avatarSize}px` }}
+        />
+      ) : (
+        <span
+          aria-hidden="true"
+          class="flex shrink-0 items-center justify-center rounded-full bg-primary font-bold text-white"
+          style={{
+            width: `${avatarSize}px`,
+            height: `${avatarSize}px`,
+            fontSize: `${Math.round(avatarSize * 0.42)}px`,
+          }}
+        >
+          {name.slice(0, 1)}
+        </span>
+      )
+    }
+    <div class="flex flex-col gap-2">
+      <p class="text-xs font-bold tracking-widest text-primary">
+        この記事を書いた人
+      </p>
+      <p class="text-lg font-bold text-text-dark">{name}</p>
+      <p class="text-sm leading-relaxed text-text">{description}</p>
+      <div class="mt-1 flex flex-wrap gap-4 text-sm">
+        <a href="/about" class="font-semibold hover:text-primary transition"
+          >このサイトについて</a
+        >
+        <a href="/contact" class="font-semibold hover:text-primary transition"
+          >お問い合わせ</a
+        >
+      </div>
+    </div>
+  </div>
+</aside>

@@ -1,0 +1,35 @@
+---
+import { humanize, slugify } from "@/lib/utils/textConverter";
+
+type Props = {
+  category?: string;
+  className?: string;
+};
+
+const { category, className = "" } = Astro.props;
+---
+
+<nav aria-label="パンくずリスト" class={`breadcrumb ${className}`}>
+  <ol class="flex flex-wrap items-center gap-2 text-sm text-text">
+    <li>
+      <a href="/" class="hover:text-primary transition duration-300">ホーム</a>
+    </li>
+    {
+      category && (
+        <>
+          <li aria-hidden="true" class="text-text-light">
+            ›
+          </li>
+          <li>
+            <a
+              href={`/categories/${slugify(category)}`}
+              class="font-semibold text-primary hover:underline"
+            >
+              {humanize(category)}
+            </a>
+          </li>
+        </>
+      )
+    }
+  </ol>
+</nav>

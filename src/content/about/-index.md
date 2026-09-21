@@ -1,23 +1,12 @@
 ---
-title: "I’m John Doe, A content writer based in LDN, Currently at Bookworm"
-meta_title: "About"
-image: "/images/author.png"
+title: "dsuke"
+meta_title: "このサイトについて"
+image: ""
 draft: false
-
-what_i_do:
-  title: "What I Do"
-  items:
-  - title: "Content Writing"
-    description: "Purus eget ipsum elementum venenatis, quis rutrum mi semper nonpurus eget ipsum elementum venenatis."
-  
-  - title: "Photography"
-    description: "Aenean maximus urna magna elementum, quis rutrum mi semper non purus eget ipsum venenatis."
-  
-  - title: "Web Research"
-    description: "Aenean maximus urna magna elementum venenatis, quis semper non purus eget ipsum venenatis."
-
 ---
 
-A content writer with over 12 years experience working across brand identity, publishing and digital products. Maecenas sit amet purus eget ipsum elementum venenatis. Aenean maximus urna magna elementum venenatis quis non purus.
+古いマンションの住環境について、自分で試して分かったことを記録しているサイトです。
 
-Purus eget ipsum elementum venenatis. Aenean maximus urna magna elementum venenatis, quis rutrum mi semper non purus eget ipsum elementum venenatis, aenean maximus urna magna elementum.
+築年数の古い住戸は、暖房を入れても寒い、窓際だけ冷えるといった問題が起きやすい一方で、大がかりな工事をしないと直らないと思われがちです。実際には、原因を切り分ければ工事をせずに改善できる部分もあります。そうした確認方法と対策を、順序立てて整理しています。
+
+記事の内容についてのご指摘や、取り上げてほしいテーマがあれば、お問い合わせページからご連絡ください。

@@ -27,10 +27,14 @@ const similerItems = (currentItem: any, allItems: any, slug: string) => {
   // merged after filter
   const mergedItems = [...new Set([...filterByCategories, ...filterByTags])];
 
-  // filter by slug
-  const filterBySlug = mergedItems.filter((product) => product.slug !== slug);
+  // 表示中の記事自身を除外する。
+  // glob loader のエントリは .slug を持たず .id なので、以前の product.slug では
+  // 常に undefined 同士の比較になり全件が除外されていた。
+  const filterById = mergedItems.filter(
+    (product: { id: string }) => product.id !== slug
+  );
 
-  return filterBySlug;
+  return filterById;
 };
 
 export default similerItems;

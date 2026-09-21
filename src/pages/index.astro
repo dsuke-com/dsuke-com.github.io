@@ -1,5 +1,8 @@
 ---
+import Pickup from "@/components/Pickup.astro";
 import Posts from "@/components/Posts.astro";
+import Sidebar from "@/components/Sidebar.astro";
+import SiteIntro from "@/components/SiteIntro.astro";
 import config from "@/config/config.json";
 import Base from "@/layouts/Base.astro";
 import Pagination from "@/layouts/components/Pagination.astro";
@@ -15,8 +18,24 @@ const currentPosts = sortedPosts.slice(0, config.settings.pagination);
 <Base>
   <section class="section">
     <div class="container">
-      <Posts posts={currentPosts} className="mb-16" />
-      <Pagination currentPage={1} totalPages={totalPages} />
+      <SiteIntro className="mb-12" />
+      <Pickup className="mb-14" />
+
+      <div class="row gx-5">
+        <div class="lg:col-8">
+          <div class="mb-6 flex items-center gap-3">
+            <span
+              aria-hidden="true"
+              class="h-[22px] w-[5px] rounded bg-primary"></span>
+            <h2 class="h4 text-text-dark">最新の記事</h2>
+          </div>
+          <Posts posts={currentPosts} className="mb-10" />
+          <Pagination currentPage={1} totalPages={totalPages} />
+        </div>
+        <div class="mt-14 lg:col-4 lg:mt-0">
+          <Sidebar />
+        </div>
+      </div>
     </div>
   </section>
 </Base>

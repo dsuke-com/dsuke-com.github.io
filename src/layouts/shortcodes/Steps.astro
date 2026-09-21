@@ -1,0 +1,64 @@
+---
+// 確認手順などの番号付きボックス。
+// 使い方（.mdx）:
+//   <Steps title="確認の手順" note="必要なもの：温湿度計｜所要時間：約10分">
+//     1. 窓から30cm離れた位置と、部屋の中央で温度を測る
+//     2. サッシの枠に手を当て、冷たさと結露の有無を確かめる
+//   </Steps>
+// 本文は通常の Markdown の番号付きリストで書く。
+type Props = {
+  title?: string;
+  note?: string;
+};
+
+const { title = "手順", note } = Astro.props;
+---
+
+<div class="steps-box">
+  <p class="steps-title">{title}</p>
+  <div class="steps-body">
+    <slot />
+  </div>
+  {note && <p class="steps-note">{note}</p>}
+</div>
+
+<style>
+  .steps-box {
+    margin-block: 2rem;
+    border: 2px solid var(--color-primary);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background-color: var(--color-body);
+  }
+
+  .steps-title {
+    margin: 0;
+    background-color: var(--color-primary);
+    padding: 0.6875rem 1.125rem;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #05221f;
+  }
+
+  .steps-body {
+    padding: 1.125rem 1.25rem 0.5rem;
+  }
+
+  /* Markdown のリストをそのまま受け取るため、内側の余白を詰める */
+  .steps-body :global(ol),
+  .steps-body :global(ul) {
+    margin-block: 0;
+  }
+
+  .steps-body :global(li) {
+    line-height: 1.85;
+  }
+
+  .steps-note {
+    margin: 0;
+    border-top: 1px dashed var(--color-border);
+    padding: 0.875rem 1.25rem 1.125rem;
+    font-size: 0.875rem;
+    color: var(--color-text);
+  }
+</style>

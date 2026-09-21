@@ -1,0 +1,114 @@
+---
+import config from "@/config/config.json";
+import { Image } from "astro:assets";
+
+// 運営者の体験コメントを吹き出しで出す。
+// 使い方（.mdx）:
+//   <Voice>窓際と部屋の中央で3度ちがった。カーテンを替えたら1度縮まった。</Voice>
+type Props = {
+  name?: string;
+};
+
+const { name = config.author.name } = Astro.props;
+const { image } = config.author;
+---
+
+<div class="voice">
+  <div class="voice-avatar">
+    {
+      image ? (
+        <Image
+          src={image}
+          alt={name}
+          width={112}
+          height={112}
+          class="voice-image"
+        />
+      ) : (
+        <span aria-hidden="true" class="voice-initial">
+          {name.slice(0, 1)}
+        </span>
+      )
+    }
+    <span class="voice-name">{name}</span>
+  </div>
+  <div class="voice-bubble">
+    <span aria-hidden="true" class="voice-arrow"></span>
+    <div class="voice-body"><slot /></div>
+  </div>
+</div>
+
+<style>
+  .voice {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-block: 2rem;
+  }
+
+  .voice-avatar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3125rem;
+    flex-shrink: 0;
+    width: 3.5rem;
+  }
+
+  .voice-image,
+  .voice-initial {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .voice-initial {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .voice-name {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .voice-bubble {
+    position: relative;
+    flex-grow: 1;
+  }
+
+  .voice-arrow {
+    position: absolute;
+    left: -0.4375rem;
+    top: 1.125rem;
+    width: 0.8125rem;
+    height: 0.8125rem;
+    background-color: #fffaf0;
+    border-left: 2px solid #e8d4a8;
+    border-bottom: 2px solid #e8d4a8;
+    transform: rotate(45deg);
+  }
+
+  .voice-body {
+    border: 2px solid #e8d4a8;
+    border-radius: 0.5rem;
+    background-color: #fffaf0;
+    padding: 1rem 1.25rem;
+  }
+
+  .voice-body :global(p) {
+    margin-block: 0;
+    line-height: 1.85;
+  }
+
+  .voice-body :global(p + p) {
+    margin-top: 0.75rem;
+  }
+</style>

@@ -1,0 +1,119 @@
+---
+import AuthorBox from "@/components/AuthorBox.astro";
+import config from "@/config/config.json";
+import { getSinglePage } from "@/lib/contentParser.astro";
+import { getAllTaxonomy, getTaxonomy } from "@/lib/taxonomyParser.astro";
+import { humanize } from "@/lib/utils/textConverter";
+
+type Props = {
+  className?: string;
+};
+
+const { className = "" } = Astro.props;
+
+const categories = await getTaxonomy("posts", "categories");
+const allCategories = await getAllTaxonomy("posts", "categories");
+
+// 注目記事は config.featured_posts に記事の id を並べて指定する。
+// アクセス解析を入れるまでは自動集計ができないため手動で選ぶ。
+const posts = await getSinglePage("posts");
+const featuredIds: string[] = config.featured_posts ?? [];
+const featured = featuredIds
+  .map((id) => posts.find((p: { id: string }) => p.id === id))
+  .filter(Boolean);
+---
+
+<aside class={`flex flex-col gap-10 ${className}`}>
+  <AuthorBox variant="compact" />
+
+  {/* 記事のテーマ */}
+  {
+    categories.length > 0 && (
+      <div class="rounded-lg border border-border">
+        <p class="rounded-t-lg bg-dark px-4 py-3 text-sm font-bold text-white">
+          記事のテーマ
+        </p>
+        <ul>
+          {categories.map((category, i) => (
+            <li class={i > 0 ? "border-t border-border" : ""}>
+              <a
+                href={`/categories/${category}`}
+                class="flex min-h-[46px] items-center justify-between px-4 font-medium text-text-dark transition duration-300 hover:text-primary"
+              >
+                {humanize(category ?? "")}
+                <span class="text-sm text-text">
+                  {allCategories.filter((c) => c === category).length}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
+  {/* 注目の記事 */}
+  {
+    featured.length > 0 && (
+      <div class="rounded-lg border border-border">
+        <p class="rounded-t-lg bg-dark px-4 py-3 text-sm font-bold text-white">
+          注目の記事
+        </p>
+        <ul class="flex flex-col gap-3 p-4">
+          {featured.map((post: any, i: number) => (
+            <li class="flex items-start gap-3">
+              <span
+                aria-hidden="true"
+                class="mt-[2px] flex h-6 w-6 shrink-0 items-center justify-center rounded bg-light text-xs font-bold text-text-dark"
+              >
+                {i + 1}
+              </span>
+              <a
+                href={`/blog/${post.id}`}
+                class="text-sm font-medium leading-relaxed text-text-dark transition duration-300 hover:text-primary"
+              >
+                {post.data.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
+  {/* 検索 */}
+  <div class="rounded-lg border border-border p-4">
+    <label
+      for="sidebar-search"
+      class="mb-3 block text-sm font-bold text-text-dark">記事を検索</label
+    >
+    <form action="/search" method="get" class="flex gap-2">
+      <input
+        id="sidebar-search"
+        type="search"
+        name="q"
+        placeholder="キーワードを入力"
+        class="form-input min-h-[44px] w-full"
+      />
+      <button
+        type="submit"
+        aria-label="検索する"
+        class="flex min-h-[44px] w-11 shrink-0 items-center justify-center rounded-md bg-dark text-white transition duration-300 hover:bg-primary"
+      >
+        <svg
+          width="17"
+          height="17"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <circle cx="11" cy="11" r="7"></circle>
+          <path d="M20 20l-4.3-4.3"></path>
+        </svg>
+      </button>
+    </form>
+  </div>
+</aside>
