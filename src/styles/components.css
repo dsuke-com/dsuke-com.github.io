@@ -46,7 +46,7 @@
   li {
     @apply inline-block;
     a {
-      @apply block p-3 text-dark transition hover:text-primary;
+      @apply block p-3 text-dark transition hover:text-primary-dark;
       svg {
         @apply text-lg;
       }
@@ -59,7 +59,7 @@
   li {
     @apply inline-block;
     a {
-      @apply block p-3 transition transition duration-300 hover:text-primary;
+      @apply block p-3 transition transition duration-300 hover:text-primary-dark;
     }
   }
 }
@@ -160,17 +160,17 @@
 }
 
 .notice.note {
-  @apply text-[#1B83E2];
+  @apply text-[#12609F];
   @apply border-current;
 }
 
 .notice.tip {
-  @apply text-[#40D294];
+  @apply text-[#157048];
   @apply border-current;
 }
 
 .notice.info {
-  @apply text-[#E3A72C];
+  @apply text-[#8A6512];
   @apply border-current;
 }
 

@@ -30,19 +30,19 @@ const { title, description, meta_title, image } = entry.data;
           </p>
           <div class="rounded-lg border border-border bg-light p-6">
             <div class="flex items-center text-text-dark text-xl">
-              <FaEnvelope className="mr-3 text-primary" />
+              <FaEnvelope className="mr-3 text-primary-dark" />
               <p class="font-semibold">メール</p>
             </div>
             <p class="mt-3 pl-8">
               <a
                 href={`mailto:${email}`}
-                class="font-medium hover:text-primary transition duration-300 break-all"
+                class="font-semibold hover:text-primary-dark transition duration-300 break-all"
               >
                 {email}
               </a>
             </p>
           </div>
-          <p class="mt-6 text-sm text-text-light">
+          <p class="mt-6 text-sm text-text">
             内容を確認のうえ、必要に応じて返信します。すべてのご連絡に返信できるとは限りません。
           </p>
         </div>

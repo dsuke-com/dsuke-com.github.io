@@ -19,7 +19,8 @@ type Props = {
 const { title = "おすすめ順", items } = Astro.props;
 
 // 1〜3位は色を変え、4位以降は共通の色にする
-const rankColors = ["#c9a227", "#9aa0a6", "#b08152"];
+// 白文字を乗せるため、金・銀・銅をコントラスト基準（4.5:1）を満たす濃さにしている
+const rankColors = ["#8a6d1f", "#5f6367", "#7a5636"];
 ---
 
 <div class="ranking">

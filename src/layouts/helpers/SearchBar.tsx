@@ -152,7 +152,7 @@ export default function SearchBar({ searchList }: Props) {
               {item.data.image && (
                 <a
                   href={`/${item.slug}`}
-                  className="group block overflow-hidden rounded-lg hover:text-primary"
+                  className="group block overflow-hidden rounded-lg hover:text-primary-dark"
                 >
                   <img
                     className="w-full transition duration-300 group-hover:scale-[1.03]"
@@ -169,7 +169,7 @@ export default function SearchBar({ searchList }: Props) {
                   <a
                     key={i}
                     href={`/categories/${slugify(category)}`}
-                    className="font-semibold text-primary transition duration-300 hover:underline"
+                    className="font-semibold text-primary-dark transition duration-300 hover:underline"
                   >
                     {humanize(category)}
                   </a>
@@ -187,7 +187,7 @@ export default function SearchBar({ searchList }: Props) {
               <h3 className="h5 mb-2">
                 <a
                   href={`/${item.slug}`}
-                  className="block transition duration-300 hover:text-primary"
+                  className="block transition duration-300 hover:text-primary-dark"
                 >
                   {item.data.title}
                 </a>

@@ -12,7 +12,7 @@ const { category, className = "" } = Astro.props;
 <nav aria-label="パンくずリスト" class={`breadcrumb ${className}`}>
   <ol class="flex flex-wrap items-center gap-2 text-sm text-text">
     <li>
-      <a href="/" class="hover:text-primary transition duration-300">ホーム</a>
+      <a href="/" class="hover:text-primary-dark transition duration-300">ホーム</a>
     </li>
     {
       category && (
@@ -23,7 +23,7 @@ const { category, className = "" } = Astro.props;
           <li>
             <a
               href={`/categories/${slugify(category)}`}
-              class="font-semibold text-primary hover:underline"
+              class="font-semibold text-primary-dark hover:underline"
             >
               {humanize(category)}
             </a>

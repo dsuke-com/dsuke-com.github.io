@@ -30,7 +30,7 @@ const colClass = columns === 3 ? "col-12 sm:col-6 lg:col-4" : "col-12 sm:col-6";
             {post.data.image && (
               <a
                 href={`/blog/${post.id}`}
-                class="group block overflow-hidden rounded-lg hover:text-primary"
+                class="group block overflow-hidden rounded-lg hover:text-primary-dark"
               >
                 <Image
                   class="w-full transition duration-300 group-hover:scale-[1.03]"
@@ -47,7 +47,7 @@ const colClass = columns === 3 ? "col-12 sm:col-6 lg:col-4" : "col-12 sm:col-6";
               {post.data.categories.map((category) => (
                 <a
                   href={`/categories/${slugify(category)}`}
-                  class="font-semibold text-primary transition duration-300 hover:underline"
+                  class="font-semibold text-primary-dark transition duration-300 hover:underline"
                 >
                   {humanize(category)}
                 </a>
@@ -64,7 +64,7 @@ const colClass = columns === 3 ? "col-12 sm:col-6 lg:col-4" : "col-12 sm:col-6";
             <h3 class={isLead ? "h4 mb-3" : "h5 mb-3"}>
               <a
                 href={`/blog/${post.id}`}
-                class="block transition duration-300 hover:text-primary"
+                class="block transition duration-300 hover:text-primary-dark"
               >
                 {post.data.title}
               </a>
@@ -74,9 +74,11 @@ const colClass = columns === 3 ? "col-12 sm:col-6 lg:col-4" : "col-12 sm:col-6";
             </p>
             <a
               href={`/blog/${post.id}`}
-              class="mt-auto inline-flex min-h-[44px] items-center gap-2 self-start text-sm font-bold transition duration-300 hover:text-primary"
+              class="mt-auto inline-flex min-h-[44px] items-center gap-2 self-start text-sm font-bold transition duration-300 hover:text-primary-dark"
             >
-              続きを読む
+              {/* 「続きを読む」だけではリンク先が分からないため、
+                  読み上げと検索エンジン向けに記事名を添える */}
+              続きを読む<span class="sr-only">：{post.data.title}</span>
               <svg
                 width="16"
                 height="16"

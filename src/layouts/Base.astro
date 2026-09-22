@@ -52,7 +52,10 @@ const { title, meta_title, description, image, noindex, canonical } =
     {
       fontEntries.map(([key]) => {
         const cssVar = `--font-${key}` as any;
-        return <Font cssVariable={cssVar} preload />;
+        {/* preload はしない。日本語フォントは unicode-range で121分割されるため、
+            preload すると使わないサブセットまで全部（5.2MB）先読みしてしまう。
+            外すとブラウザが実際に使う字形のサブセットだけを取得する。 */}
+        return <Font cssVariable={cssVar} />;
       })
     }
 
