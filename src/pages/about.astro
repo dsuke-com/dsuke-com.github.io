@@ -13,10 +13,10 @@ const { title, meta_title, image, what_i_do } = entry.data;
 <Base title={title} meta_title={meta_title} image={image}>
   <section class="section">
     <div class="container">
-      <div class="row md:gx-4">
-        <div class="sm:col-5 md:col-4">
-          {
-            image && (
+      <div class={`row md:gx-4 ${image ? "" : "justify-center"}`}>
+        {
+          image && (
+            <div class="sm:col-5 md:col-4">
               <div class="img-cover mb-8">
                 <Image
                   src={image}
@@ -26,10 +26,10 @@ const { title, meta_title, image, what_i_do } = entry.data;
                   class="rounded-lg w-full"
                 />
               </div>
-            )
-          }
-        </div>
-        <div class="sm:col-7 md:col-8">
+            </div>
+          )
+        }
+        <div class={image ? "sm:col-7 md:col-8" : "md:col-10 lg:col-8"}>
           <h1 set:html={markdownify(title)} class="h3 mb-8" />
 
           <div class="content">
