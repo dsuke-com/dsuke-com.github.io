@@ -7,9 +7,11 @@ import { humanize } from "@/lib/utils/textConverter";
 
 type Props = {
   className?: string;
+  // 記事ページでは本文末尾に同じ内容が出るため、重複を避けて false にする
+  showAuthor?: boolean;
 };
 
-const { className = "" } = Astro.props;
+const { className = "", showAuthor = true } = Astro.props;
 
 const categories = await getTaxonomy("posts", "categories");
 const allCategories = await getAllTaxonomy("posts", "categories");
@@ -24,7 +26,7 @@ const featured = featuredIds
 ---
 
 <aside class={`flex flex-col gap-10 ${className}`}>
-  <AuthorBox variant="compact" />
+  {showAuthor && <AuthorBox variant="compact" heading="運営者" />}
 
   {/* 記事のテーマ */}
   {

@@ -2,6 +2,7 @@
 import AuthorBox from "@/components/AuthorBox.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import Share from "@/components/Share.astro";
+import Sidebar from "@/components/Sidebar.astro";
 import SimilarPosts from "@/components/SimilarPosts.astro";
 import TableOfContents from "@/components/TableOfContents.astro";
 import config from "@/config/config.json";
@@ -22,11 +23,11 @@ const { title, description, categories, image, date, tags, updated } =
 
 <section class="section">
   <div class="container">
-    <article class="row justify-center">
-      <div class="md:col-10 lg:col-8">
+    <div class="row gx-5">
+      <article class="lg:col-8">
         <Breadcrumb category={categories[0]} className="mb-5" />
 
-        <h1 set:html={markdownify(title)} class="h2 mb-5 leading-normal" />
+        <h1 set:html={markdownify(title)} class="h3 mb-5 leading-normal" />
 
         <!-- メタ情報：著者・公開日・更新日 -->
         <div
@@ -108,8 +109,12 @@ const { title, description, categories, image, date, tags, updated } =
           description={description}
           heading="この記事を共有する"
         />
+      </article>
+
+      <div class="mt-14 lg:col-4 lg:mt-0">
+        <Sidebar />
       </div>
-    </article>
+    </div>
   </div>
 </section>
 
@@ -118,7 +123,7 @@ const { title, description, categories, image, date, tags, updated } =
   similarPosts.length > 0 && (
     <section class="section pt-0">
       <div class="container">
-        <h2 class="h3 mb-8 text-center">あわせて読みたい</h2>
+        <h2 class="h4 mb-8 text-center">あわせて読みたい</h2>
         <SimilarPosts posts={similarPosts.slice(0, 3)} />
       </div>
     </section>

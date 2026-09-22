@@ -6,9 +6,15 @@ type Props = {
   // "inline" は記事末尾、"compact" はサイドバーなどの狭い場所
   variant?: "inline" | "compact";
   className?: string;
+  // 同じページに2つ置くとき（記事末尾とサイドバー）に見出しを分ける
+  heading?: string;
 };
 
-const { variant = "inline", className = "" } = Astro.props;
+const {
+  variant = "inline",
+  className = "",
+  heading = "この記事を書いた人",
+} = Astro.props;
 const { name, image, description } = config.author;
 
 const compact = variant === "compact";
@@ -47,7 +53,7 @@ const avatarSize = compact ? 64 : 84;
     }
     <div class="flex flex-col gap-2">
       <p class="text-xs font-bold tracking-widest text-primary">
-        この記事を書いた人
+        {heading}
       </p>
       <p class="text-lg font-bold text-text-dark">{name}</p>
       <p class="text-sm leading-relaxed text-text">{description}</p>

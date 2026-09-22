@@ -5,7 +5,7 @@
 
 /* container */
 .container {
-  @apply max-w-[1000px]! px-4! md:px-8! mx-auto;
+  @apply max-w-[1200px]! px-4! md:px-8! mx-auto;
 }
 
 /* page heading */
@@ -209,4 +209,33 @@ footer p a {
   border-bottom: 1px solid var(--color-border);
   padding-bottom: 0.625rem;
   line-height: 1.6;
+}
+
+/* 記事本文の見出しサイズ。
+   theme.json の h1〜h6 スケール（1.2）は欧文向けで、日本語だと
+   本文 16px に対して h2 が 40px、h3 が 33px と重くなるため本文内だけ詰める。 */
+.content h2 {
+  font-size: 1.3125rem;
+}
+
+.content h3 {
+  font-size: 1.125rem;
+}
+
+.content h4 {
+  font-size: 1.0625rem;
+}
+
+@media (min-width: 768px) {
+  .content h2 {
+    font-size: 1.5rem;
+  }
+
+  .content h3 {
+    font-size: 1.25rem;
+  }
+
+  .content h4 {
+    font-size: 1.0625rem;
+  }
 }
