@@ -1,37 +1,68 @@
 ---
+import Breadcrumb from "@/components/Breadcrumb.astro";
 import Posts from "@/components/Posts.astro";
+import Sidebar from "@/components/Sidebar.astro";
 import Base from "@/layouts/Base.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import { getTaxonomy } from "@/lib/taxonomyParser.astro";
+import { getSiteCategories } from "@/lib/utils/categories";
 import { sortByDate } from "@/lib/utils/sortFunctions";
 import taxonomyFilter from "@/lib/utils/taxonomyFilter";
 import { humanize } from "@/lib/utils/textConverter";
 
 export async function getStaticPaths() {
-  const categories = await getTaxonomy("posts", "categories");
+  const posts = await getSinglePage("posts");
+  // config.json の4カテゴリーは記事が0本でもページを用意する。
+  // 記事側にだけ存在するカテゴリーもリンク切れを出さないよう拾う。
+  const configured = getSiteCategories(posts).map((c) => c.slug);
+  const used = await getTaxonomy("posts", "categories");
 
-  return categories.map((category) => {
-    return {
-      params: { category },
-    };
-  });
+  return [...new Set([...configured, ...used])].map((category) => ({
+    params: { category },
+  }));
 }
 
 const { category } = Astro.params;
 
 const posts = await getSinglePage("posts");
-const filterByCategory = taxonomyFilter(posts, "categories", category);
-const sortedPosts = sortByDate(filterByCategory);
+const sortedPosts = sortByDate(taxonomyFilter(posts, "categories", category));
+const meta = getSiteCategories(posts).find((c) => c.slug === category);
 
-const title = humanize(category || "");
+const title = meta?.name ?? humanize(category || "");
+const description = meta?.description ?? `${title}に関する記事の一覧です。`;
 ---
 
-<Base title={title || "カテゴリー"}>
-  <div class="section">
+<Base title={title} description={description}>
+  <section class="section">
     <div class="container">
-      <p class="text-center text-2xl mb-4">このカテゴリーの記事</p>
-      <h1 class="h2 mb-16 text-center text-primary-dark">{title}</h1>
-      <Posts posts={sortedPosts} fluid={false} />
+      <div class="row gx-5">
+        <div class="lg:col-8">
+          <Breadcrumb className="mb-8" />
+
+          <header class="border-border mb-10 border-b pb-8">
+            <p class="text-primary mb-2 text-sm font-semibold">カテゴリー</p>
+            <h1 class="h3 mb-4">{title}</h1>
+            <p class="text-text-muted mb-4 leading-loose">{description}</p>
+            <p class="text-text-muted text-sm">{sortedPosts.length}記事</p>
+          </header>
+
+          {
+            sortedPosts.length > 0 ? (
+              <Posts posts={sortedPosts} fluid={false} />
+            ) : (
+              <p class="border-border bg-surface text-text-muted rounded-lg border border-dashed p-8 text-center leading-loose">
+                このカテゴリーの記事はまだありません。
+                <br />
+                書けたらここに並びます。
+              </p>
+            )
+          }
+        </div>
+
+        <div class="mt-14 lg:col-4 lg:mt-0">
+          <Sidebar />
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 </Base>

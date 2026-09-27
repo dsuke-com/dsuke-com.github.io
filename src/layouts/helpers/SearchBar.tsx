@@ -135,7 +135,7 @@ export default function SearchBar({ searchList }: Props) {
             <>
               「{query}」に一致する記事は見つかりませんでした。
               <br />
-              <span className="text-sm text-text">
+              <span className="text-text text-sm">
                 別のことばでも試してみてください。
               </span>
             </>
@@ -152,7 +152,7 @@ export default function SearchBar({ searchList }: Props) {
               {item.data.image && (
                 <a
                   href={`/${item.slug}`}
-                  className="group block overflow-hidden rounded-lg hover:text-primary-dark"
+                  className="group hover:text-primary-dark block overflow-hidden rounded-lg"
                 >
                   <img
                     className="w-full transition duration-300 group-hover:scale-[1.03]"
@@ -164,12 +164,12 @@ export default function SearchBar({ searchList }: Props) {
                 </a>
               )}
 
-              <div className="mt-5 mb-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-text">
+              <div className="text-text mt-5 mb-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
                 {item.data.categories?.map((category: string, i: number) => (
                   <a
                     key={i}
                     href={`/categories/${slugify(category)}`}
-                    className="font-semibold text-primary-dark transition duration-300 hover:underline"
+                    className="text-primary-dark font-semibold transition duration-300 hover:underline"
                   >
                     {humanize(category)}
                   </a>
@@ -187,12 +187,12 @@ export default function SearchBar({ searchList }: Props) {
               <h3 className="h5 mb-2">
                 <a
                   href={`/${item.slug}`}
-                  className="block transition duration-300 hover:text-primary-dark"
+                  className="hover:text-primary-dark block transition duration-300"
                 >
                   {item.data.title}
                 </a>
               </h3>
-              <p className="line-clamp-3 text-text">{excerpt}</p>
+              <p className="text-text line-clamp-3">{excerpt}</p>
             </div>
           );
         })}

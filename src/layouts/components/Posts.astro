@@ -1,5 +1,6 @@
 ---
 import dateFormat from "@/lib/utils/dateFormat";
+import postUrl from "@/lib/utils/postUrl";
 import { humanize, plainify, slugify } from "@/lib/utils/textConverter";
 import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
@@ -15,7 +16,13 @@ type Props = {
 
 const { className, posts, fluid, columns = 2 } = Astro.props;
 
-const colClass = columns === 3 ? "col-12 sm:col-6 lg:col-4" : "col-12 sm:col-6";
+// 1本しかないときに半幅で置くと余白が大きく空いて落ち着かないので全幅にする
+const colClass =
+  posts.length === 1
+    ? "col-12"
+    : columns === 3
+      ? "col-12 sm:col-6 lg:col-4"
+      : "col-12 sm:col-6";
 ---
 
 <div
@@ -26,11 +33,11 @@ const colClass = columns === 3 ? "col-12 sm:col-6 lg:col-4" : "col-12 sm:col-6";
       const isLead = i === 0 && fluid !== false;
       return (
         <div class={isLead ? "col-12" : colClass}>
-          <article class="flex h-full flex-col">
+          <article class="border-border bg-surface flex h-full flex-col overflow-hidden rounded-lg border p-5">
             {post.data.image && (
               <a
-                href={`/blog/${post.id}`}
-                class="group block overflow-hidden rounded-lg hover:text-primary-dark"
+                href={postUrl(post)}
+                class="group hover:text-primary-dark -mx-5 -mt-5 block overflow-hidden"
               >
                 <Image
                   class="w-full transition duration-300 group-hover:scale-[1.03]"
@@ -42,12 +49,12 @@ const colClass = columns === 3 ? "col-12 sm:col-6 lg:col-4" : "col-12 sm:col-6";
               </a>
             )}
             <div
-              class={`flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-text ${post.data.image ? "mt-5" : ""} mb-3`}
+              class={`text-text-muted flex flex-wrap items-center gap-x-3 gap-y-1 text-sm ${post.data.image ? "mt-5" : ""} mb-3`}
             >
               {post.data.categories.map((category) => (
                 <a
                   href={`/categories/${slugify(category)}`}
-                  class="font-semibold text-primary-dark transition duration-300 hover:underline"
+                  class="text-primary-dark font-semibold transition duration-300 hover:underline"
                 >
                   {humanize(category)}
                 </a>
@@ -63,18 +70,18 @@ const colClass = columns === 3 ? "col-12 sm:col-6 lg:col-4" : "col-12 sm:col-6";
             </div>
             <h3 class={isLead ? "h4 mb-3" : "h5 mb-3"}>
               <a
-                href={`/blog/${post.id}`}
-                class="block transition duration-300 hover:text-primary-dark"
+                href={postUrl(post)}
+                class="hover:text-primary-dark block transition duration-300"
               >
                 {post.data.title}
               </a>
             </h3>
-            <p class="mb-4 line-clamp-3 text-text">
+            <p class="text-text-muted mb-4 line-clamp-3">
               {post.data.description || plainify(post.body ?? "")}
             </p>
             <a
-              href={`/blog/${post.id}`}
-              class="mt-auto inline-flex min-h-[44px] items-center gap-2 self-start text-sm font-bold transition duration-300 hover:text-primary-dark"
+              href={postUrl(post)}
+              class="hover:text-primary-dark mt-auto inline-flex min-h-[44px] items-center gap-2 self-start text-sm font-bold transition duration-300"
             >
               {/* 「続きを読む」だけではリンク先が分からないため、
                   読み上げと検索エンジン向けに記事名を添える */}
@@ -89,8 +96,8 @@ const colClass = columns === 3 ? "col-12 sm:col-6 lg:col-4" : "col-12 sm:col-6";
                 stroke-linecap="round"
                 aria-hidden="true"
               >
-                <path d="M5 12h13"></path>
-                <path d="M12 5l7 7-7 7"></path>
+                <path d="M5 12h13" />
+                <path d="M12 5l7 7-7 7" />
               </svg>
             </a>
           </article>

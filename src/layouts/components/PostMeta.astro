@@ -1,0 +1,64 @@
+---
+// 旅行日・場所・総額など、記事の要点を冒頭にまとめる箱。
+// frontmatter に値があるものだけ出す。
+type Props = {
+  tripDate?: string;
+  location?: string;
+  totalCost?: number;
+  className?: string;
+};
+
+const { tripDate, location, totalCost, className = "" } = Astro.props;
+
+const items = [
+  tripDate && { label: "時期", value: tripDate },
+  location && { label: "場所", value: location },
+  totalCost !== undefined && {
+    label: "かかった費用",
+    value: `${totalCost.toLocaleString("ja-JP")}円`,
+  },
+].filter(Boolean) as { label: string; value: string }[];
+---
+
+{
+  items.length > 0 && (
+    <dl class={`post-meta ${className}`}>
+      {items.map((item) => (
+        <div>
+          <dt>{item.label}</dt>
+          <dd>{item.value}</dd>
+        </div>
+      ))}
+    </dl>
+  )
+}
+
+<style>
+  .post-meta {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0 0 2rem;
+    border-left: 3px solid var(--color-sage);
+    background-color: var(--color-body);
+    padding: 1.125rem 1.25rem;
+    border-radius: 0 0.375rem 0.375rem 0;
+  }
+
+  .post-meta > div {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.9375rem;
+  }
+
+  .post-meta dt {
+    flex-shrink: 0;
+    width: 7rem;
+    color: var(--color-text-muted);
+  }
+
+  .post-meta dd {
+    margin: 0;
+    font-weight: 600;
+    color: var(--color-text-dark);
+  }
+</style>

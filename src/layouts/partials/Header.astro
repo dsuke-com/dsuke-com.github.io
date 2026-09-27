@@ -26,7 +26,7 @@ const hasSocial = Array.isArray(social.main) && social.main.length > 0;
   {/* 上部のSNSバー：アカウントが設定されているときだけ出す */}
   {
     hasSocial && (
-      <div class="hidden border-b border-border md:block">
+      <div class="border-border hidden border-b md:block">
         <div class="container">
           <Social
             source={social.main}
@@ -40,11 +40,11 @@ const hasSocial = Array.isArray(social.main) && social.main.length > 0;
   {/* ロゴ：md以上では中央に置き、説明文を添える */}
   <div class="hidden flex-col items-center gap-2 py-7 md:flex">
     <Logo />
-    <p class="text-sm text-text">{config.metadata.meta_description}</p>
+    <p class="text-text-muted text-sm">{config.site.tagline}</p>
   </div>
 
   {/* メニュー帯 */}
-  <div class="md:border-y md:border-border md:bg-light">
+  <div class="md:border-border md:bg-light md:border-y">
     <nav class="navbar container md:justify-center">
       {/* 以下 4 要素の兄弟関係は safe.css の開閉に必要なため崩さない */}
       <input id="nav-toggle" type="checkbox" class="hidden" />
@@ -132,7 +132,7 @@ const hasSocial = Array.isArray(social.main) && social.main.length > 0;
       {/* 検索：モバイルではハンバーガーの隣に出す */}
       <div class="order-1 ml-auto flex md:hidden">
         <a
-          class="inline-block cursor-pointer p-2 text-xl text-dark transition hover:text-primary-dark"
+          class="text-dark hover:text-primary-dark inline-block cursor-pointer p-2 text-xl transition"
           href="/search"
           title="記事を検索"
           aria-label="記事を検索"

@@ -1,0 +1,14 @@
+---
+// 構造化データ。schema はそのまま JSON-LD として書き出す。
+type Props = {
+  schema: Record<string, unknown>;
+};
+
+const { schema } = Astro.props;
+---
+
+<script
+  type="application/ld+json"
+  is:inline
+  set:html={JSON.stringify(schema)}
+/>

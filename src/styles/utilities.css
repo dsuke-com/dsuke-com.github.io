@@ -1,3 +1,16 @@
 @utility shadow {
   box-shadow: 0 10px 30px rgb(22 28 45 / 10%);
 }
+
+/* 横スクロール防止。
+   .row.gx-5 は左右に -1.75rem の負マージンを付けるが、モバイルの
+   .container の余白は 1rem しかないため 0.75rem ずつはみ出し、
+   ページ全体が横スクロールしていた。md 未満だけ gutter を詰める。
+   このファイルは @layer の外から読み込まれるので、Tailwind が出す
+   .gx-5 より確実に後勝ちする。 */
+@media (max-width: 767.98px) {
+  .row.gx-5,
+  .row.g-5 {
+    --bs-gutter-x: 2rem;
+  }
+}

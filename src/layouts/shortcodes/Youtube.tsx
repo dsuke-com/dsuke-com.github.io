@@ -13,8 +13,15 @@ const Youtube = ({
     import("@justinribeiro/lite-youtube");
   }, []);
 
-  // @ts-ignore
-  return <lite-youtube className="rounded-lg" videoid={id} videotitle={title} {...rest} />;
+  return (
+    // @ts-ignore lite-youtube はカスタム要素で JSX の型定義がない
+    <lite-youtube
+      className="rounded-lg"
+      videoid={id}
+      videotitle={title}
+      {...rest}
+    />
+  );
 };
 
 export default Youtube;

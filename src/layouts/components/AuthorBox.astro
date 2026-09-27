@@ -22,7 +22,7 @@ const avatarSize = compact ? 64 : 84;
 ---
 
 <aside
-  class={`rounded-lg border border-border bg-light ${compact ? "p-5" : "p-6"} ${className}`}
+  class={`rounded-lg border border-border bg-surface ${compact ? "p-5" : "p-6"} ${className}`}
 >
   <div
     class={`flex gap-5 ${compact ? "flex-col items-center text-center" : "items-start"}`}
@@ -40,7 +40,7 @@ const avatarSize = compact ? 64 : 84;
       ) : (
         <span
           aria-hidden="true"
-          class="flex shrink-0 items-center justify-center rounded-full bg-primary font-bold text-white"
+          class="bg-apricot text-text-dark flex shrink-0 items-center justify-center rounded-full font-bold"
           style={{
             width: `${avatarSize}px`,
             height: `${avatarSize}px`,
@@ -52,16 +52,20 @@ const avatarSize = compact ? 64 : 84;
       )
     }
     <div class="flex flex-col gap-2">
-      <p class="text-xs font-bold tracking-widest text-primary-dark">
+      <p class="text-primary text-xs font-bold tracking-widest">
         {heading}
       </p>
-      <p class="text-lg font-bold text-text-dark">{name}</p>
-      <p class="text-sm leading-relaxed text-text">{description}</p>
+      <p class="text-text-dark text-lg font-bold">{name}</p>
+      <p class="text-text-muted text-sm leading-relaxed">{description}</p>
       <div class="mt-1 flex flex-wrap gap-4 text-sm">
-        <a href="/about" class="font-semibold hover:text-primary-dark transition"
-          >このサイトについて</a
+        <a
+          href="/about"
+          class="text-primary hover:text-primary-dark font-semibold transition"
+          >私たちについて</a
         >
-        <a href="/contact" class="font-semibold hover:text-primary-dark transition"
+        <a
+          href="/contact"
+          class="text-primary hover:text-primary-dark font-semibold transition"
           >お問い合わせ</a
         >
       </div>

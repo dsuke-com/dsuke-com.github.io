@@ -1,0 +1,72 @@
+---
+// 購入リンク。アフィリエイトリンクのときは sponsored={true} を付けると
+// rel="sponsored nofollow noopener" になる。
+type Props = {
+  href: string;
+  shop?: string;
+  sponsored?: boolean;
+  className?: string;
+};
+
+const {
+  href,
+  shop = "販売ページ",
+  sponsored = false,
+  className = "",
+} = Astro.props;
+
+const rel = sponsored
+  ? "sponsored nofollow noopener noreferrer"
+  : "noopener noreferrer";
+---
+
+<a
+  href={href}
+  target="_blank"
+  rel={rel}
+  class={`buy-link ${className}`}
+  data-sponsored={sponsored ? "true" : undefined}
+>
+  <span>{shop}で見る</span>
+  <svg
+    width="15"
+    height="15"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M14 4h6v6"></path>
+    <path d="M20 4l-9 9"></path>
+    <path d="M18 14v5a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h5"></path>
+  </svg>
+  <span class="sr-only">（新しいタブで開きます）</span>
+</a>
+
+<style>
+  .buy-link {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 1px solid var(--color-primary);
+    border-radius: 0.375rem;
+    background-color: var(--color-primary);
+    padding: 0.5rem 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #fff;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .buy-link:hover {
+    background-color: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
+    color: #fff;
+  }
+</style>

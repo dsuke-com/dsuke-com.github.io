@@ -37,7 +37,8 @@ export const plainify = (content: string) => {
   const filterBrackets = parseMarkdown.replace(/<\/?[^>]+(>|$)/gm, "");
   const filterSpaces = filterBrackets.replace(/[\r\n]\s*[\r\n]/gm, "");
   const stripHTML = htmlEntityDecoder(filterSpaces);
-  return stripHTML;
+  // marked が末尾に改行を足すため、メタタグに入れる前に落とす
+  return stripHTML.trim();
 };
 
 // strip entities for plainify

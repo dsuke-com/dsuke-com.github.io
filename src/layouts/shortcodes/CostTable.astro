@@ -1,0 +1,160 @@
+---
+// 費用の記録。金額は「いつ時点か」が分からないと読者が使えないので asOf を必ず添える。
+//
+// 例:
+// <CostTable
+//   caption="結婚式でかかった費用"
+//   asOf="2025年10月"
+//   items={[
+//     { label: "会場費", amount: 250000, note: "土曜・午後" },
+//     { label: "衣装", amount: 180000 },
+//   ]}
+// />
+type Item = { label: string; amount: number; note?: string };
+
+type Props = {
+  items: Item[];
+  caption?: string;
+  asOf?: string;
+  // 合計を自分で指定したいとき（端数調整など）。未指定なら items の合計。
+  total?: number;
+  className?: string;
+};
+
+const { items, caption, asOf, total, className = "" } = Astro.props;
+
+const sum = total ?? items.reduce((acc, item) => acc + item.amount, 0);
+const yen = (value: number) => `${value.toLocaleString("ja-JP")}円`;
+const hasNote = items.some((item) => item.note);
+---
+
+<figure class={`cost-table ${className}`}>
+  {
+    (caption || asOf) && (
+      <figcaption>
+        {caption && <span class="cost-table-title">{caption}</span>}
+        {asOf && <span class="cost-table-asof">{asOf}時点</span>}
+      </figcaption>
+    )
+  }
+
+  <div class="cost-table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">項目</th>
+          <th scope="col" class="cost-table-amount">金額</th>
+          {hasNote && <th scope="col">メモ</th>}
+        </tr>
+      </thead>
+      <tbody>
+        {
+          items.map((item) => (
+            <tr>
+              <th scope="row">{item.label}</th>
+              <td class="cost-table-amount">{yen(item.amount)}</td>
+              {hasNote && <td>{item.note ?? "—"}</td>}
+            </tr>
+          ))
+        }
+      </tbody>
+      <tfoot>
+        <tr>
+          <th scope="row">合計</th>
+          <td class="cost-table-amount">{yen(sum)}</td>
+          {hasNote && <td />}
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <p class="cost-table-note">
+    金額は利用当時のもので、時期・条件によって変わります。
+  </p>
+</figure>
+
+<style>
+  .cost-table {
+    margin-block: 2rem;
+  }
+
+  .cost-table figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-bottom: 0.625rem;
+  }
+
+  .cost-table-title {
+    font-weight: 700;
+    color: var(--color-text-dark);
+  }
+
+  .cost-table-asof {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+  }
+
+  /* 狭い画面で列が潰れないよう横スクロールさせる */
+  .cost-table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+  }
+
+  .cost-table table {
+    width: 100%;
+    min-width: 22rem;
+    border-collapse: collapse;
+    background-color: var(--color-body);
+    font-size: 0.9375rem;
+  }
+
+  .cost-table th,
+  .cost-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    vertical-align: top;
+    line-height: 1.7;
+  }
+
+  .cost-table thead th {
+    background-color: var(--color-sage);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
+  }
+
+  .cost-table tbody th,
+  .cost-table tfoot th {
+    font-weight: 600;
+    color: var(--color-text-dark);
+  }
+
+  .cost-table tbody tr + tr,
+  .cost-table tfoot tr {
+    border-top: 1px solid var(--color-border);
+  }
+
+  .cost-table tfoot {
+    background-color: var(--color-accent);
+  }
+
+  .cost-table tfoot td {
+    font-weight: 700;
+    color: var(--color-text-dark);
+  }
+
+  .cost-table-amount {
+    white-space: nowrap;
+    text-align: right;
+  }
+
+  .cost-table-note {
+    margin: 0.625rem 0 0;
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+  }
+</style>

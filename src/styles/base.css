@@ -1,18 +1,36 @@
 html {
   @apply text-base;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  @apply bg-body font-primary font-normal leading-relaxed text-text;
+  @apply bg-body font-primary text-text leading-relaxed font-normal;
 }
 
+/* 見出し：大見出しは明朝、小見出しはゴシックで組む。
+   明朝に font-bold を当てると太らせた偽ボールドになるため 600 までに留める。 */
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  @apply font-primary font-bold leading-tight text-dark;
+  @apply text-text-dark leading-tight;
+}
+
+/* 書体は見出しの「階層」で決める。.h1〜.h6 はサイズだけを指定するクラスなので、
+   <h1 class="h3"> のように大きさを落としても書体は明朝のままにする。 */
+h1,
+h2 {
+  @apply font-heading font-semibold;
+  letter-spacing: 0.01em;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  @apply font-primary font-bold;
 }
 
 h1,
@@ -52,4 +70,30 @@ strong {
 
 img {
   @apply inline-block;
+}
+
+/* キーボード操作でどこにいるか分かるようにする */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* 動きを減らす設定の端末ではアニメーションを止める */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* 画像は幅に追随させ、高さ属性との比率でCLSを防ぐ */
+img,
+video {
+  max-width: 100%;
+  height: auto;
 }

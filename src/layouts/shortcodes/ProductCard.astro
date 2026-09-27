@@ -1,0 +1,279 @@
+---
+import BuyLink from "@/shortcodes/BuyLink.astro";
+import Placeholder from "@/components/Placeholder.astro";
+
+// 実際に使った商品の記録。
+// 使っていない商品を使ったように書かないこと。分からない項目は省略する。
+//
+// 例:
+// <ProductCard
+//   name="商品名"
+//   maker="メーカー"
+//   price={3480}
+//   priceAsOf="2026年1月"
+//   purchasedAt="2025年12月"
+//   usagePeriod="3か月"
+//   image="/images/posts/xxx.jpg"
+//   pros={["良かった点", "良かった点"]}
+//   cons={["気になった点"]}
+//   suitedFor={["こんな人に向いている"]}
+//   notSuitedFor={["この場合は要らない"]}
+//   href="https://example.com/..."
+//   shop="Amazon"
+//   sponsored
+// />
+type Props = {
+  name: string;
+  maker?: string;
+  // 円。記録した時点の価格
+  price?: number;
+  priceAsOf?: string;
+  purchasedAt?: string;
+  usagePeriod?: string;
+  image?: string;
+  imageAlt?: string;
+  pros?: string[];
+  cons?: string[];
+  suitedFor?: string[];
+  notSuitedFor?: string[];
+  href?: string;
+  shop?: string;
+  sponsored?: boolean;
+  className?: string;
+};
+
+const {
+  name,
+  maker,
+  price,
+  priceAsOf,
+  purchasedAt,
+  usagePeriod,
+  image,
+  imageAlt,
+  pros = [],
+  cons = [],
+  suitedFor = [],
+  notSuitedFor = [],
+  href,
+  shop,
+  sponsored = false,
+  className = "",
+} = Astro.props;
+
+const yen = (value: number) => `${value.toLocaleString("ja-JP")}円`;
+
+// 価格記録：いつ時点の値段かが分からないと使えないので必ず添える
+const specs = [
+  maker && { label: "メーカー", value: maker },
+  price !== undefined && {
+    label: "価格",
+    value: priceAsOf ? `${yen(price)}（${priceAsOf}時点）` : yen(price),
+  },
+  purchasedAt && { label: "購入時期", value: purchasedAt },
+  usagePeriod && { label: "使用期間", value: usagePeriod },
+].filter(Boolean) as { label: string; value: string }[];
+---
+
+<aside class={`product-card ${className}`} aria-label={`${name} の記録`}>
+  <div class="product-card-head">
+    <div class="product-card-media">
+      {
+        image ? (
+          <img
+            src={image}
+            alt={imageAlt || name}
+            width={480}
+            height={480}
+            loading="lazy"
+            decoding="async"
+          />
+        ) : (
+          <Placeholder ratio="1 / 1" label="商品の写真" />
+        )
+      }
+    </div>
+
+    <div class="product-card-body">
+      <p class="product-card-name">{name}</p>
+      {
+        specs.length > 0 && (
+          <dl class="product-card-specs">
+            {specs.map((spec) => (
+              <div>
+                <dt>{spec.label}</dt>
+                <dd>{spec.value}</dd>
+              </div>
+            ))}
+          </dl>
+        )
+      }
+      {
+        href && (
+          <p class="product-card-cta">
+            <BuyLink href={href} shop={shop} sponsored={sponsored} />
+          </p>
+        )
+      }
+    </div>
+  </div>
+
+  {
+    (pros.length > 0 || cons.length > 0) && (
+      <div class="product-card-grid">
+        {pros.length > 0 && (
+          <div class="product-card-list product-card-list--pros">
+            <p>良かった点</p>
+            <ul>
+              {pros.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {cons.length > 0 && (
+          <div class="product-card-list product-card-list--cons">
+            <p>気になった点</p>
+            <ul>
+              {cons.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  {
+    (suitedFor.length > 0 || notSuitedFor.length > 0) && (
+      <div class="product-card-grid">
+        {suitedFor.length > 0 && (
+          <div class="product-card-list">
+            <p>こんな人に向いている</p>
+            <ul>
+              {suitedFor.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {notSuitedFor.length > 0 && (
+          <div class="product-card-list">
+            <p>この場合は要らない</p>
+            <ul>
+              {notSuitedFor.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    )
+  }
+</aside>
+
+<style>
+  .product-card {
+    margin-block: 2rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    background-color: var(--color-body);
+    padding: 1.25rem;
+  }
+
+  .product-card-head {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .product-card-media img {
+    width: 100%;
+    height: auto;
+    border-radius: 0.375rem;
+    object-fit: cover;
+  }
+
+  .product-card-name {
+    margin: 0 0 0.875rem;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    line-height: 1.6;
+    color: var(--color-text-dark);
+  }
+
+  .product-card-specs {
+    display: grid;
+    gap: 0.375rem;
+    margin: 0;
+    font-size: 0.875rem;
+  }
+
+  .product-card-specs > div {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .product-card-specs dt {
+    flex-shrink: 0;
+    width: 5.5rem;
+    color: var(--color-text-muted);
+  }
+
+  .product-card-specs dd {
+    margin: 0;
+    color: var(--color-text-dark);
+  }
+
+  .product-card-cta {
+    margin: 1.125rem 0 0;
+  }
+
+  .product-card-grid {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.25rem;
+    border-top: 1px solid var(--color-border);
+    padding-top: 1.25rem;
+  }
+
+  .product-card-list p {
+    display: inline-block;
+    margin: 0 0 0.625rem;
+    border-radius: 0.25rem;
+    background-color: var(--color-body);
+    padding: 0.125rem 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--color-text-dark);
+  }
+
+  .product-card-list--pros p {
+    background-color: var(--color-sage);
+  }
+
+  .product-card-list--cons p {
+    background-color: var(--color-apricot);
+  }
+
+  .product-card-list ul {
+    margin: 0;
+    padding-left: 1.125rem;
+    font-size: 0.9375rem;
+    line-height: 1.85;
+    color: var(--color-text);
+  }
+
+  @media (min-width: 640px) {
+    .product-card-head {
+      grid-template-columns: 180px 1fr;
+      align-items: start;
+    }
+
+    .product-card-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 1.75rem;
+    }
+  }
+</style>

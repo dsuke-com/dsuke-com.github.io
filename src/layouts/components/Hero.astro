@@ -1,0 +1,89 @@
+---
+import Placeholder from "@/components/Placeholder.astro";
+import config from "@/config/config.json";
+import { Image } from "astro:assets";
+
+type Props = {
+  className?: string;
+};
+
+const { className = "" } = Astro.props;
+const { catchcopy, subcopy, image, imageAlt } = config.hero;
+---
+
+{/* メインビジュアル。大きなボタンは置かず、写真と短い文章だけで構成する */}
+<section class={`hero ${className}`} aria-labelledby="hero-copy">
+  <div class="hero-text">
+    <p id="hero-copy" class="hero-catch">{catchcopy}</p>
+    <p class="hero-sub">{subcopy}</p>
+  </div>
+
+  <div class="hero-visual">
+    {
+      image ? (
+        <Image
+          src={image}
+          alt={imageAlt || catchcopy}
+          width={1600}
+          height={900}
+          loading="eager"
+          class="hero-image"
+        />
+      ) : (
+        <Placeholder ratio="16 / 9" label="トップの写真" />
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .hero {
+    display: grid;
+    gap: 1.75rem;
+  }
+
+  .hero-catch {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.75rem;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+    color: var(--color-text-dark);
+    margin: 0;
+    /* 日本語が語の途中で折り返されないようにする（未対応ブラウザでは無視される） */
+    word-break: auto-phrase;
+    text-wrap: pretty;
+  }
+
+  .hero-sub {
+    margin: 0.875rem 0 0;
+    font-size: 0.9375rem;
+    line-height: 1.9;
+    color: var(--color-text-muted);
+  }
+
+  .hero-image {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    object-fit: cover;
+  }
+
+  @media (min-width: 768px) {
+    .hero-catch {
+      font-size: 2.25rem;
+    }
+
+    .hero-sub {
+      font-size: 1rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero {
+      grid-template-columns: 6fr 7fr;
+      align-items: center;
+      gap: 3rem;
+    }
+  }
+</style>

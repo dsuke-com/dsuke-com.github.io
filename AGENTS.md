@@ -1,3 +1,11 @@
+## このサイトの決めごと
+
+デザイン（配色・書体・レイアウトのルール）、コンテンツ仕様、やらないこと、
+過去にハマった落とし穴は `.claude/design-spec.md` にまとめてある。
+見た目・文言・記事の構造に関わる変更をする前に必ず読むこと。
+
+記事の追加手順や設定ファイルの場所は `README.md` を参照。
+
 ## Development
 
 When starting the dev server, use background mode:

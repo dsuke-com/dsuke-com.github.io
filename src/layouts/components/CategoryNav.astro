@@ -1,0 +1,71 @@
+---
+import { getSinglePage } from "@/lib/contentParser.astro";
+import { getSiteCategories } from "@/lib/utils/categories";
+import { getLineIcon } from "@/lib/utils/lineIcons";
+
+type Props = {
+  title?: string;
+  className?: string;
+  // 見出しを出さずにカードだけ並べたいとき
+  headingLevel?: "h2" | "h3";
+};
+
+const {
+  title = "記事のカテゴリー",
+  className = "",
+  headingLevel = "h2",
+} = Astro.props;
+
+const posts = await getSinglePage("posts");
+const categories = getSiteCategories(posts);
+const Heading = headingLevel;
+---
+
+<section class={className} aria-labelledby="category-nav-heading">
+  <div class="mb-6 flex items-center gap-3">
+    <span aria-hidden="true" class="bg-apricot h-[22px] w-[4px] rounded"></span>
+    <Heading id="category-nav-heading" class="h4 text-text-dark">
+      {title}
+    </Heading>
+  </div>
+
+  <ul class="row gy-4 gx-4 list-none">
+    {
+      categories.map((category) => (
+        <li class="col-12 sm:col-6 lg:col-3">
+          <a
+            href={category.url}
+            class="border-border bg-surface hover:border-primary flex h-full flex-col gap-3 rounded-lg border p-5 transition duration-300"
+          >
+            <span class="flex items-center justify-between">
+              <span
+                aria-hidden="true"
+                class="bg-apricot text-text-dark flex h-11 w-11 items-center justify-center rounded-[10px]"
+              >
+                <svg
+                  width="23"
+                  height="23"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                  set:html={getLineIcon(category.icon)}
+                />
+              </span>
+              <span class="text-text-muted text-xs">
+                {category.count > 0 ? `${category.count}記事` : "準備中"}
+              </span>
+            </span>
+            <span class="text-text-dark font-bold">{category.name}</span>
+            <span class="text-text-muted text-sm leading-relaxed">
+              {category.description}
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</section>

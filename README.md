@@ -1,116 +1,178 @@
-<h1 align=center>Bookworm Light Astro</h1>
-<p align=center>Bookworm Light is a feature-rich, minimal, highly customizable, easy-to-use free Astro blog theme.</p>
-<h2 align="center"> <a target="_blank" href="https://bookworm-light-astro.vercel.app/" rel="nofollow">👀Demo</a> | <a  target="_blank" href="https://pagespeed.web.dev/report?url=https%3A%2F%2Fbookworm-light-astro.vercel.app%2F&form_factor=desktop">Page Speed (100%)🚀</a>
-</h2>
+# ふたり暮らしの実録ノート
 
-<p align=center>
-  <a href="https://github.com/withastro/astro/releases/tag/astro%406.1.9" alt="Contributors">
-    <img src="https://img.shields.io/static/v1?label=ASTRO&message=6.1.9&color=000&logo=astro" />
-  </a>
+30代夫婦のプロポーズ、結婚式、海外旅行、中古マンション購入、その後の暮らしを、費用や失敗も含めて記録する個人ブログです。
 
-  <a href="https://github.com/themefisher/bookworm-light-astro/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/themefisher/bookworm-light-astro" alt="license"></a>
+- **フレームワーク**: [Astro](https://docs.astro.build)（静的生成）
+- **スタイル**: Tailwind CSS v4
+- **記事**: Markdown / MDX（`src/content/posts/`）
+- **ベーステーマ**: Bookworm Light Astro（Themefisher, MIT）
 
-  <img src="https://img.shields.io/github/languages/code-size/themefisher/bookworm-light-astro" alt="code size">
+## デザイン・仕様
 
-  <a href="https://github.com/themefisher/bookworm-light-astro/graphs/contributors">
-    <img src="https://img.shields.io/github/contributors/themefisher/bigspring-light-astro" alt="contributors"></a>
-</p>
+配色や書体のルール、コンテンツ仕様、やらないことの一覧は `.claude/design-spec.md` にまとめています。
+見た目や記事の構造を変えるときはそちらを先に読んでください。
 
-![bookworm-light](https://assets.teamosis.com/thumbs/bookworm-light.png)
+## 開発
 
-Bookworm Light is a minimal multi-author free Astro blog theme which is perfect for any kind of blog website. Whether you're interested in food, beauty, travel, photography, lifestyle, fitness, health, or other topics, this theme is a great fit. The theme is super fast and SEO friendly which makes it easier for your content to be discovered by search engines.
+```bash
+pnpm install
 
-## 🔑Key Features
-
-- 🎨 Highly Customizable (Color, Font, Menu, Social Links, SEO Meta Tags, etc.)
-- 👥 Multi-Author Support
-- 📚 Authors Page
-- 👤 Author Single Page
-- 🔍 Search Functionality with FuseJS
-- 🏷️ Tags and Categories Support
-- 📲 Post Social Share Option
-- 🔗 Similar Post Suggestions
-- ⚡ Fast by Default (95+ Google PageSpeed Score)
-- ⚙️ Netlify Settings Pre-configured
-- 📬 Contact Form Support
-- 🌅 Support OG Image
-- ✍️ Write and Update Content in Markdown / MDX
-- 📚 MDX Components Auto Import
-- 📝 Includes Draft Pages and Posts
-- 🚀 Built with Tailwind CSS Framework
-- 📱 Fully Responsive on Desktops, Tablets, and Smartphones
-- 🔍 SEO Friendly
-
-<!-- installation -->
-
-## 🔧Installation
-
-After downloading the template, you have some prerequisites to install. Then you can run it on your localhost. You can view the package.json file to see which scripts are included.
-
-### ⚙️Install prerequisites (once for a machine)
-
-- **Node Installation:** [Install node js](https://nodejs.org/en/download/) [Recommended LTS version]
-
-### 🖥️Local setup
-
-After successfully installing those dependencies, open this template with any IDE [[VS Code](https://code.visualstudio.com/) recommended], and then open the integrated terminal in your editor [VS Code shortcut <code>ctrl/cmd+\`</code>]
-
-- Install dependencies
-
-```
-yarn install
+pnpm dev      # 開発サーバー
+pnpm build    # 本番ビルド（dist/ に出力）
+pnpm preview  # ビルド結果の確認
+pnpm check    # 型チェック（astro check）
+pnpm lint     # フォーマット確認（prettier --check）
+pnpm format   # フォーマット適用
 ```
 
-- Run locally
+Claude Code で開発サーバーを起動するときは `astro dev --background` を使います（`CLAUDE.md` 参照）。
 
-```
-yarn dev
-```
+## 記事を追加する
 
-After that, it will open up a preview of the template in your default browser, watch for changes to source files, and live-reload the browser when changes are saved.
+1. `src/content/posts/-template.md` をコピーして、`src/content/posts/` に新しいファイル名で保存する
+   - ファイル名がそのままURLになる（`my-article.md` → `/blog/my-article`）
+   - 日本語より英数字とハイフンのファイル名を推奨
+   - `-` で始まるファイルはビルド対象外（ひな型置き場）
+2. フロントマターを埋める
+3. 本文を書く
+4. `draft: true` を `false` に変えると公開される
 
-## 🔨Production Build
+### フロントマター
 
-After finishing all the customization, you can create a production build by running this command.
+| キー          | 必須 | 内容                                                               |
+| ------------- | ---- | ------------------------------------------------------------------ |
+| `title`       | ○    | 記事タイトル。日記調ではなく、読者が検索する言葉で書く             |
+| `description` |      | 検索結果に出る説明文。120文字前後                                  |
+| `publishedAt` | ○    | 公開日時（`2026-01-01T09:00:00Z`）                                 |
+| `updatedAt`   |      | 更新日時。書き直したら更新する                                     |
+| `category`    | ○    | `ふたりの節目` / `旅の記録` / `家を買う` / `家を整える` から1つ    |
+| `tags`        |      | 自由。`["トルコ", "eSIM"]`                                         |
+| `eyecatch`    |      | 横長のアイキャッチ画像のパス（例 `/images/posts/01.jpg`）          |
+| `eyecatchAlt` |      | アイキャッチの代替テキスト                                         |
+| `draft`       | ○    | `true` の間は一覧・記事ページ・サイトマップ・RSSのいずれにも出ない |
+| `affiliate`   | ○    | `true` にすると本文より前に広告表示が出る                          |
+| `slug`        |      | URLをファイル名と変えたいときだけ                                  |
+| `tripDate`    |      | 旅行・イベントの時期。記事冒頭のまとめに出る                       |
+| `location`    |      | 場所。同上                                                         |
+| `totalCost`   |      | 総額（円、数値）。同上                                             |
+| `readingTime` |      | 読了目安（分）。未指定でも構わない                                 |
 
-```
-yarn build
-```
+カテゴリーは `src/config/config.json` の `categories` が正です。ここに書いたカテゴリーは、記事が0本でも一覧ページとカテゴリーページが用意されます。増やすときはこの配列に足してください。
 
-<!-- edit with sitepins -->
+### 本文の構成
 
-## 📝 Edit Content with CMS
+手記として書きつつ、同じ場面の人が使えるように次の順で書きます。
 
-This template comes pre-configured with [**Sitepins**](https://sitepins.com/?aff=tfgithub), a Git-based Headless CMS designed for seamless content management. You can update your website’s text, images, and configuration without touching a single line of code.
+1. 当時の状況
+2. なぜそれを選んだか
+3. 事前に準備したこと
+4. 実際にやったこと
+5. かかった費用
+6. よかったこと
+7. 失敗・後悔
+8. もう一度やるならどうするか
+9. 使用した商品やサービス
 
-**How to get started:**
+## 記事の中で使える部品
 
-Click the Edit with Sitepins button below and follow the on-screen instructions to start editing your content visually.
+MDX / Markdown からそのまま書けます（import は不要）。
 
-  <a target="_blank" href="https://app.sitepins.com/new/clone?name=Bookworm%20Light%20Astro&repository=https://github.com/themefisher/bookworm-light-astro/?aff=tfgithub">
-    <img src="https://sitepins.com/button.svg" alt="Edit with Sitepins">
-  </a>
-  
-<!-- reporting issue -->
+| 部品                   | 用途                                                                       |
+| ---------------------- | -------------------------------------------------------------------------- |
+| `<AdDisclosure />`     | 広告・PR表示。`affiliate: true` なら自動で出るので、追加で置きたいときだけ |
+| `<ProductCard ... />`  | 商品情報・良かった点・気になった点・向いている人・価格記録・購入リンク     |
+| `<CostTable ... />`    | 費用の表（合計は自動計算）                                                 |
+| `<CompareTable ... />` | 比較表                                                                     |
+| `<Figure ... />`       | キャプション付きの写真                                                     |
+| `<Gallery ... />`      | 複数写真のギャラリー                                                       |
+| `<BuyLink ... />`      | 購入リンク単体                                                             |
 
-## 🐞Reporting Issues
+各コンポーネントの先頭コメントに記述例があります（`src/layouts/shortcodes/`）。
 
-We use GitHub Issues as the official bug tracker for this Template. Please Search [existing issues](https://github.com/themefisher/bookworm-light-astro/issues). It’s possible someone has already reported the same problem.
-If your problem or idea has not been addressed yet, feel free to [open a new issue](https://github.com/themefisher/bookworm-light-astro/issues).
+既存テーマの `<Notice>` `<Accordion>` `<Tabs>` `<Steps>` `<Youtube>` なども引き続き使えます。
 
-<!-- licence -->
+### アフィリエイトリンクの扱い
 
-## 📄License
+- 広告を含む記事は `affiliate: true` にする。本文より前に「この記事にはアフィリエイト広告が含まれています。」が出る
+- 表示文言は `src/config/config.json` の `params.affiliate_notice`
+- 商品リンクは `<BuyLink href="..." sponsored />` を使う。`sponsored` を付けると `rel="sponsored nofollow noopener noreferrer"` になる
+- **使っていない商品を、使ったように書かない**。価格は「いつ時点か」を必ず添える
 
-Copyright (c) 2023 - Present, Designed & Developed by [Themefisher](https://themefisher.com)
+## 写真を追加する
 
-**Code License:** Released under the [MIT](https://github.com/themefisher/bookworm-light-astro/blob/main/LICENSE) license.
+1. `public/images/posts/` に置く
+2. 記事から `/images/posts/ファイル名.jpg` で参照する
 
-**Image license:** The images are only for demonstration purposes. They have their license, we don't have permission to share those images.
+- 横長のアイキャッチは 1200×630 程度
+- `<Figure>` `<Gallery>` は `width` / `height` を指定して読み込み時のレイアウトずれ（CLS）を防ぐ
+- `alt` は必ず書く。写真がまだない場所は指定を省くと控えめなプレースホルダーが出る
 
-## 👨‍💻Need Custom Development Services?
+### 写真の選び方・加工の方針
 
-Besides developing beautifully designed and blazing-fast themes, we help businesses create fast, performance-focused, scalable & secure websites based on NextJs, Hugo, Astro, etc.
+- 自然光を感じる、明るく透明感のある写真にする。白い壁、淡い木目、リネンなどの明るい素材感を生かす
+- セピア加工、強い黄み、暗いフィルターは使わない
+- 彩度は下げすぎない。海・街並み・料理の自然な色を残す
+- 白飛びさせず、商品や室内の細部が分かる明るさにする
+- 人物の顔を大きく出さず、手元、後ろ姿、風景、持ち物を中心にする
+- 写真のまわりには白い余白を取る（記事本文は白いカードの上に組んでいます）
 
-If you need a custom theme, theme customization, or complete website development services from scratch you can [Hire Us](https://themefisher.com/contact).
+## 設定ファイル
+
+| ファイル                 | 内容                                                                       |
+| ------------------------ | -------------------------------------------------------------------------- |
+| `src/config/config.json` | サイト名、説明、カテゴリー定義、トップのキャッチコピー、著者情報、注目記事 |
+| `src/config/menu.json`   | ヘッダー・フッターのメニュー                                               |
+| `src/config/theme.json`  | 配色とフォント                                                             |
+| `src/config/social.json` | SNSリンク（空なら非表示）                                                  |
+
+### 配色（暮らしの手帖）
+
+自然光の入る部屋のような、明るく軽やかな配色。画面の大部分をアイボリーとホワイトが占め、淡い差し色は「背景」として使い、小さな文字には濃い色を当てます。
+
+`src/config/theme.json` の値が CSS 変数として書き出されます。
+
+| 変数                   | 値        | 用途                                                       |
+| ---------------------- | --------- | ---------------------------------------------------------- |
+| `--color-body`         | `#FFFCF7` | 全体背景（明るいアイボリー）                               |
+| `--color-surface`      | `#FFFFFF` | 記事本文・カード（ホワイト）                               |
+| `--color-primary`      | `#99502D` | リンク・主要ボタン・記事の大見出し（深いオレンジブラウン） |
+| `--color-primary-dark` | `#7D3F22` | 上記のホバー                                               |
+| `--color-apricot`      | `#F2B895` | メインの差し色。アイコン地、見出しの細い帯                 |
+| `--color-sage`         | `#C7DCC8` | サブの差し色。サイドバーの見出し帯、表のヘッダー           |
+| `--color-accent`       | `#F8E5A6` | バターイエロー。PR表示や順位など小さなポイントだけ         |
+| `--color-text`         | `#36312D` | 本文（チャコールブラウン）                                 |
+| `--color-text-muted`   | `#6E655D` | 補助文字（グレーブラウン）                                 |
+| `--color-border`       | `#EAE3D9` | 境界線（淡いベージュ）                                     |
+
+守っているルール:
+
+- 大きな面積を濃い色で塗らない。ヘッダーもフッターも明るい背景
+- 淡いアプリコット・セージ・バターは**背景にだけ**使い、小さな文字の色には使わない
+- 淡い背景には必ず `--color-text`（#36312D）を載せる。この組み合わせはすべて WCAG AA（4.5:1）以上
+
+フォントは端末のものを使います（`fonts.use_system_fonts: true`）。見出しは明朝、本文はゴシックです。日本語のWebフォントは合計数MBになるため読み込んでいません。リモートフォントに戻す場合は `use_system_fonts` を `false` にしたうえで、`src/layouts/Base.astro` に `astro:assets` の `<Font>` を戻してください。
+
+## SEO
+
+自動で付くもの:
+
+- ページごとの `title` / `description`
+- canonical URL（1ページ1本）
+- OGP / Twitter Card
+- `sitemap-index.xml`（`@astrojs/sitemap`）
+- `robots.txt`（`public/robots.txt`）
+- `/rss.xml`
+- パンくずリストと `BreadcrumbList` 構造化データ
+- 記事ページの `Article` 構造化データ
+
+`draft: true` の記事はページ自体が生成されないため、一覧・サイトマップ・RSSのどこにも出ません。
+
+## 公開
+
+`dist/` を静的ホスティングに上げます。サイトのURLは `astro.config.mjs` の `site` と `src/config/config.json` の `site.base_url` の両方に書かれているので、ドメインを変えるときは両方直してください。`public/robots.txt` の `Sitemap:` 行も同様です。
+
+> このサイトはルート（`/`）配信を前提にしています。`astro.config.mjs` に `base` を足すと、テーマ側が絶対パスで書いている画像とリンクが壊れます。
+
+## ライセンス
+
+ベーステーマ Bookworm Light Astro は MIT（`LICENSE`）。記事本文と写真の著作権は運営者に帰属します。

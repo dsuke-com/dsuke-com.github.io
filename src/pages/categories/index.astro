@@ -1,28 +1,89 @@
 ---
+import Breadcrumb from "@/components/Breadcrumb.astro";
 import Base from "@/layouts/Base.astro";
-import { getTaxonomy } from "@/lib/taxonomyParser.astro";
-import { humanize } from "@/lib/utils/textConverter";
+import { getSinglePage } from "@/lib/contentParser.astro";
+import { getSiteCategories } from "@/lib/utils/categories";
+import { getLineIcon } from "@/lib/utils/lineIcons";
 
-const categories = await getTaxonomy("posts", "categories");
-
-import { BiCategoryAlt } from "react-icons/bi";
+const posts = await getSinglePage("posts");
+const categories = getSiteCategories(posts);
 ---
 
-<Base title={"カテゴリー"}>
+<Base
+  title="カテゴリー"
+  description="ふたり暮らしの実録ノートの記事カテゴリー一覧です。ふたりの節目、旅の記録、家を買う、家を整えるの4つに分けて記録しています。"
+>
   <section class="section">
-    <div class="container text-center">
-      <h1 class="h2 page-heading">カテゴリー</h1>
-      <ul class="space-x-4">
+    <div class="container">
+      <Breadcrumb className="mb-8" />
+
+      <h1 class="h2 mb-4">カテゴリー</h1>
+      <p class="text-text-muted mb-12 max-w-2xl leading-loose">
+        記事は次の4つに分けています。費用の記録はカテゴリーを分けず、それぞれの記事の中に書いています。
+      </p>
+
+      <ul class="row gy-5 gx-5 list-none">
         {
           categories.map((category) => (
-            <li class="inline-block">
-              <a
-                href={`/categories/${category}`}
-                class="rounded-lg bg-light px-4 py-2 text-dark transition hover:bg-primary hover:text-white flex items-center group"
-              >
-                <BiCategoryAlt className="mr-1 text-primary-dark group-hover:text-white transition h-6 w-6 scale-75" />
-                {humanize(category || "")}
-              </a>
+            <li class="col-12 md:col-6">
+              <article class="border-border bg-surface flex h-full flex-col rounded-lg border p-6">
+                <div class="mb-4 flex items-center gap-4">
+                  <span
+                    aria-hidden="true"
+                    class="bg-apricot text-text-dark flex h-12 w-12 shrink-0 items-center justify-center rounded-[10px]"
+                  >
+                    <svg
+                      width="25"
+                      height="25"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                      set:html={getLineIcon(category.icon)}
+                    />
+                  </span>
+                  <div>
+                    <h2 class="h5 mb-1">
+                      <a
+                        href={category.url}
+                        class="text-text-dark hover:text-primary transition"
+                      >
+                        {category.name}
+                      </a>
+                    </h2>
+                    <p class="text-text-muted text-sm">
+                      {category.count > 0 ? `${category.count}記事` : "準備中"}
+                    </p>
+                  </div>
+                </div>
+
+                <p class="text-text-muted mb-5 leading-loose">
+                  {category.description}
+                </p>
+
+                <a
+                  href={category.url}
+                  class="text-primary hover:text-primary-dark mt-auto inline-flex min-h-[44px] items-center gap-2 self-start text-sm font-bold transition"
+                >
+                  記事を見る<span class="sr-only">：{category.name}</span>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.4"
+                    stroke-linecap="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 12h13" />
+                    <path d="M12 5l7 7-7 7" />
+                  </svg>
+                </a>
+              </article>
             </li>
           ))
         }

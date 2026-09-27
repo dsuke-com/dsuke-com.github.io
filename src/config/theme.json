@@ -2,24 +2,32 @@
   "colors": {
     "default": {
       "theme_color": {
-        "primary": "#00857a",
-        "body": "#fff",
-        "border": "#D5D5D5",
-        "light": "#FAFAFA",
-        "dark": "#152035",
-        "primary-dark": "#00695f"
+        "primary": "#99502D",
+        "primary-dark": "#7D3F22",
+        "apricot": "#F2B895",
+        "sage": "#C7DCC8",
+        "accent": "#F8E5A6",
+        "body": "#FFFCF7",
+        "surface": "#FFFFFF",
+        "light": "#FFFFFF",
+        "border": "#EAE3D9",
+        "dark": "#36312D"
       },
       "text_color": {
-        "text": "#68696b",
-        "text-dark": "#152035",
-        "text-light": "#a1a5ae"
+        "text": "#36312D",
+        "text-dark": "#36312D",
+        "text-muted": "#6E655D",
+        "text-light": "#6E655D"
       }
     }
   },
   "fonts": {
+    "use_system_fonts": true,
     "font_family": {
-      "primary": "Noto+Sans+JP:wght@400;700",
-      "primary_type": "sans-serif"
+      "primary": "\"Hiragino Kaku Gothic ProN\", \"Hiragino Sans\", \"BIZ UDPGothic\", \"Yu Gothic\", \"Meiryo\", system-ui, sans-serif",
+      "primary_type": "sans-serif",
+      "heading": "\"Hiragino Mincho ProN\", \"Yu Mincho\", \"YuMincho\", \"Noto Serif JP\", serif",
+      "heading_type": "serif"
     },
     "font_size": {
       "base": "16",

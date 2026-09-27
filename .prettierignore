@@ -1,0 +1,10 @@
+# 生成物・ロックファイル
+dist
+.astro
+pnpm-lock.yaml
+package-lock.json
+
+# Sitepins（CMS）が生成・管理するファイル
+.sitepins
+public/sitepins-manifest.json
+public/.well-known

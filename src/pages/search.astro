@@ -2,13 +2,14 @@
 import SearchBar from "@/helpers/SearchBar";
 import Base from "@/layouts/Base.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
+import { postSlug } from "@/lib/utils/postUrl";
 
 // Retrieve all articles
 const posts = await getSinglePage("posts");
 
 // List of items to search in
 const searchList = posts.map((item) => ({
-  slug: `blog/${item.id}`,
+  slug: `blog/${postSlug(item)}`,
   data: item.data,
   content: item.body,
 }));

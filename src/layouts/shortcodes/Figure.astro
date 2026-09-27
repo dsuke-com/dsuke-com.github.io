@@ -1,0 +1,65 @@
+---
+import Placeholder from "@/components/Placeholder.astro";
+
+// キャプション付きの記事内写真。
+// width / height を必ず渡して、読み込み前後で本文がずれない（CLS）ようにする。
+//
+// 例: <Figure src="/images/posts/01.jpg" alt="窓際に貼った断熱シート" width={1200} height={800} caption="貼った直後の様子" />
+type Props = {
+  src?: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  caption?: string;
+  // ファーストビューに入る画像だけ eager にする
+  eager?: boolean;
+  className?: string;
+};
+
+const {
+  src,
+  alt,
+  width = 1200,
+  height = 800,
+  caption,
+  eager = false,
+  className = "",
+} = Astro.props;
+---
+
+<figure class={`post-figure ${className}`}>
+  {
+    src ? (
+      <img
+        src={src}
+        alt={alt}
+        width={width}
+        height={height}
+        loading={eager ? "eager" : "lazy"}
+        decoding="async"
+      />
+    ) : (
+      <Placeholder ratio={`${width} / ${height}`} label={alt || "写真"} />
+    )
+  }
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .post-figure {
+    margin-block: 2rem;
+  }
+
+  .post-figure img {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+  }
+
+  .post-figure figcaption {
+    margin-top: 0.625rem;
+    font-size: 0.8125rem;
+    line-height: 1.8;
+    color: var(--color-text-muted);
+  }
+</style>

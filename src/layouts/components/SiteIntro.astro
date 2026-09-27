@@ -8,11 +8,12 @@ type Props = {
 
 const { className = "" } = Astro.props;
 const { name, image, description } = config.author;
-const { title } = config.site;
 ---
 
+{/* 「私たちについて」への導線 */}
 <section
-  class={`rounded-lg border border-border bg-light p-6 md:p-8 ${className}`}
+  class={`rounded-lg border border-border bg-surface p-6 md:p-8 ${className}`}
+  aria-labelledby="site-intro-heading"
 >
   <div class="flex flex-col gap-6 sm:flex-row sm:items-start">
     {
@@ -27,20 +28,37 @@ const { title } = config.site;
       ) : (
         <span
           aria-hidden="true"
-          class="flex h-[74px] w-[74px] shrink-0 items-center justify-center self-center rounded-full bg-primary text-[31px] font-bold text-white sm:self-start"
+          class="bg-apricot text-text-dark flex h-[74px] w-[74px] shrink-0 items-center justify-center self-center rounded-full text-[31px] font-bold sm:self-start"
         >
           {name.slice(0, 1)}
         </span>
       )
     }
     <div class="flex flex-col gap-3">
-      <h2 class="h5 text-text-dark">{title} とは</h2>
-      <p class="leading-loose text-text">{description}</p>
+      <h2 id="site-intro-heading" class="h5 text-text-dark">私たちについて</h2>
+      <p class="text-text-muted leading-loose">{description}</p>
+      <p class="text-text-muted text-sm leading-loose">
+        書いているのは私たち2人の経験です。専門家の助言ではありません。金額や制度は利用した当時のものです。
+      </p>
       <a
         href="/about"
-        class="text-sm font-semibold transition duration-300 hover:text-primary-dark"
-        >運営者について詳しく →</a
+        class="text-primary hover:text-primary-dark mt-1 inline-flex min-h-[44px] items-center gap-2 self-start text-sm font-bold transition duration-300"
       >
+        くわしく読む
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.4"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path d="M5 12h13"></path>
+          <path d="M12 5l7 7-7 7"></path>
+        </svg>
+      </a>
     </div>
   </div>
 </section>

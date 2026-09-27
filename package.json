@@ -9,6 +9,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "format": "prettier -w .",
+    "lint": "prettier --check .",
     "check": "astro check",
     "deploy:cf-workers": "npm run build && wrangler deploy",
     "preview:cf-workers": "npm run build && wrangler dev"

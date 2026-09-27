@@ -5,12 +5,17 @@ import themeConfig from "../config/theme.json";
 const findFont = (fontStr) =>
   fontStr.replace(/\+/g, " ").replace(/:[^:]+/g, "");
 
+// theme.json の値がカンマを含むときは、すでに完成した font stack
+// （システムフォント指定）とみなしてそのまま使う。
+const isFontStack = (fontStr) => fontStr.includes(",");
+
 // Set font families dynamically, filtering out 'type' keys
 const fontFamilies = Object.entries(themeConfig.fonts.font_family)
   .filter(([key]) => !key.includes("type"))
   .reduce((acc, [key, font]) => {
-    acc[key] =
-      `${findFont(font)}, ${themeConfig.fonts.font_family[`${key}_type`] || "sans-serif"}`;
+    acc[key] = isFontStack(font)
+      ? font
+      : `${findFont(font)}, ${themeConfig.fonts.font_family[`${key}_type`] || "sans-serif"}`;
     return acc;
   }, {});
 

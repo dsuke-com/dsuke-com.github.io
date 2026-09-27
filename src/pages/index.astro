@@ -1,5 +1,6 @@
 ---
-import Pickup from "@/components/Pickup.astro";
+import CategoryNav from "@/components/CategoryNav.astro";
+import Hero from "@/components/Hero.astro";
 import Posts from "@/components/Posts.astro";
 import Sidebar from "@/components/Sidebar.astro";
 import SiteIntro from "@/components/SiteIntro.astro";
@@ -7,35 +8,125 @@ import config from "@/config/config.json";
 import Base from "@/layouts/Base.astro";
 import Pagination from "@/layouts/components/Pagination.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
+import { getSiteCategories } from "@/lib/utils/categories";
 import { sortByDate } from "@/lib/utils/sortFunctions";
+import { slugify } from "@/lib/utils/textConverter";
 
 const posts = await getSinglePage("posts");
 const sortedPosts = sortByDate(posts);
 const totalPages = Math.ceil(posts.length / config.settings.pagination);
 const currentPosts = sortedPosts.slice(0, config.settings.pagination);
+
+// 「最新の記事」にすでに出ている記事は、下の節で繰り返さない。
+// 記事が少ないうちは同じ記事が3回並んでしまうため。
+const shownIds = new Set(currentPosts.map((post: { id: string }) => post.id));
+
+// カテゴリー別の記事。最新の記事に出ていないものだけを、カテゴリーごとに3本まで。
+const categorySections = getSiteCategories(posts)
+  .map((category) => ({
+    ...category,
+    posts: sortedPosts
+      .filter(
+        (post: { id: string; data: { categories?: string[] } }) =>
+          !shownIds.has(post.id) &&
+          (post.data.categories ?? []).some(
+            (name: string) => slugify(name) === category.slug,
+          ),
+      )
+      .slice(0, 3),
+  }))
+  .filter((category) => category.posts.length > 0);
+
+// よく読まれている記事。いまはアクセス解析がないので config.featured_posts で
+// 手動指定する。解析を入れたらここを差し替える。
+const featuredIds: string[] = config.featured_posts ?? [];
+const featuredPosts = featuredIds
+  .map((id) => posts.find((post: { id: string }) => post.id === id))
+  .filter((post): post is (typeof posts)[number] =>
+    Boolean(post && !shownIds.has(post.id)),
+  );
 ---
 
 <Base>
+  <section class="section pb-0">
+    <div class="container">
+      <Hero />
+    </div>
+  </section>
+
+  <section class="section pb-0">
+    <div class="container">
+      <CategoryNav />
+    </div>
+  </section>
+
   <section class="section">
     <div class="container">
-      <SiteIntro className="mb-12" />
-      <Pickup className="mb-14" />
-
       <div class="row gx-5">
         <div class="lg:col-8">
           <div class="mb-6 flex items-center gap-3">
-            <span
-              aria-hidden="true"
-              class="h-[22px] w-[5px] rounded bg-primary"></span>
+            <span aria-hidden="true" class="bg-apricot h-[22px] w-[4px] rounded"
+            ></span>
             <h2 class="h4 text-text-dark">最新の記事</h2>
           </div>
           <Posts posts={currentPosts} className="mb-10" />
           <Pagination currentPage={1} totalPages={totalPages} />
+
+          {
+            categorySections.length > 0 && (
+              <div class="mt-16 flex flex-col gap-14">
+                {categorySections.map((category) => (
+                  <section aria-labelledby={`cat-${category.slug}`}>
+                    <div class="mb-5 flex flex-wrap items-baseline justify-between gap-3">
+                      <h2 id={`cat-${category.slug}`} class="h5 text-text-dark">
+                        {category.name}
+                      </h2>
+                      <a
+                        href={category.url}
+                        class="text-primary hover:text-primary-dark text-sm font-semibold transition"
+                      >
+                        {category.name}の記事をすべて見る
+                        <span class="sr-only">（{category.count}記事）</span>
+                      </a>
+                    </div>
+                    <p class="text-text-muted mb-6 text-sm leading-relaxed">
+                      {category.description}
+                    </p>
+                    <Posts posts={category.posts} fluid={false} />
+                  </section>
+                ))}
+              </div>
+            )
+          }
+
+          {
+            featuredPosts.length > 0 && (
+              <section class="mt-16" aria-labelledby="featured-heading">
+                <div class="mb-6 flex items-center gap-3">
+                  <span
+                    aria-hidden="true"
+                    class="bg-apricot h-[22px] w-[4px] rounded"
+                  />
+                  <h2 id="featured-heading" class="h4 text-text-dark">
+                    よく読まれている記事
+                  </h2>
+                </div>
+                <Posts posts={featuredPosts} fluid={false} />
+              </section>
+            )
+          }
         </div>
+
         <div class="mt-14 lg:col-4 lg:mt-0">
-          <Sidebar />
+          <Sidebar showFeatured={false} />
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="section pt-0">
+    <div class="container">
+      <SiteIntro />
     </div>
   </section>
 </Base>

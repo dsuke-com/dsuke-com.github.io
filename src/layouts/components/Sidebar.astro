@@ -2,23 +2,23 @@
 import AuthorBox from "@/components/AuthorBox.astro";
 import config from "@/config/config.json";
 import { getSinglePage } from "@/lib/contentParser.astro";
-import { getAllTaxonomy, getTaxonomy } from "@/lib/taxonomyParser.astro";
-import { humanize } from "@/lib/utils/textConverter";
+import { getSiteCategories } from "@/lib/utils/categories";
+import postUrl from "@/lib/utils/postUrl";
 
 type Props = {
   className?: string;
   // 記事ページでは本文末尾に同じ内容が出るため、重複を避けて false にする
   showAuthor?: boolean;
+  // トップページは本文側に同じ枠を置くため false にする
+  showFeatured?: boolean;
 };
 
-const { className = "", showAuthor = true } = Astro.props;
-
-const categories = await getTaxonomy("posts", "categories");
-const allCategories = await getAllTaxonomy("posts", "categories");
+const { className = "", showAuthor = true, showFeatured = true } = Astro.props;
 
 // 注目記事は config.featured_posts に記事の id を並べて指定する。
 // アクセス解析を入れるまでは自動集計ができないため手動で選ぶ。
 const posts = await getSinglePage("posts");
+const categories = getSiteCategories(posts);
 const featuredIds: string[] = config.featured_posts ?? [];
 const featured = featuredIds
   .map((id) => posts.find((p: { id: string }) => p.id === id))
@@ -28,37 +28,31 @@ const featured = featuredIds
 <aside class={`flex flex-col gap-10 ${className}`}>
   {showAuthor && <AuthorBox variant="compact" heading="運営者" />}
 
-  {/* 記事のテーマ */}
-  {
-    categories.length > 0 && (
-      <div class="rounded-lg border border-border">
-        <p class="rounded-t-lg bg-dark px-4 py-3 text-sm font-bold text-white">
-          記事のテーマ
-        </p>
-        <ul>
-          {categories.map((category, i) => (
-            <li class={i > 0 ? "border-t border-border" : ""}>
-              <a
-                href={`/categories/${category}`}
-                class="flex min-h-[46px] items-center justify-between px-4 font-semibold text-text-dark transition duration-300 hover:text-primary-dark"
-              >
-                {humanize(category ?? "")}
-                <span class="text-sm text-text">
-                  {allCategories.filter((c) => c === category).length}
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    )
-  }
+  {/* カテゴリー */}
+  <div class="border-border bg-surface overflow-hidden rounded-lg border">
+    <p class="bg-sage text-text-dark px-4 py-3 text-sm font-bold">カテゴリー</p>
+    <ul>
+      {
+        categories.map((category, i) => (
+          <li class={i > 0 ? "border-border border-t" : ""}>
+            <a
+              href={category.url}
+              class="text-text-dark hover:text-primary flex min-h-[46px] items-center justify-between px-4 font-semibold transition duration-300"
+            >
+              {category.name}
+              <span class="text-text-muted text-sm">{category.count}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
 
   {/* 注目の記事 */}
   {
-    featured.length > 0 && (
-      <div class="rounded-lg border border-border">
-        <p class="rounded-t-lg bg-dark px-4 py-3 text-sm font-bold text-white">
+    showFeatured && featured.length > 0 && (
+      <div class="border-border bg-surface overflow-hidden rounded-lg border">
+        <p class="bg-sage text-text-dark px-4 py-3 text-sm font-bold">
           注目の記事
         </p>
         <ul class="flex flex-col gap-3 p-4">
@@ -66,13 +60,13 @@ const featured = featuredIds
             <li class="flex items-start gap-3">
               <span
                 aria-hidden="true"
-                class="mt-[2px] flex h-6 w-6 shrink-0 items-center justify-center rounded bg-light text-xs font-bold text-text-dark"
+                class="bg-accent text-text-dark mt-[2px] flex h-6 w-6 shrink-0 items-center justify-center rounded text-xs font-bold"
               >
                 {i + 1}
               </span>
               <a
-                href={`/blog/${post.id}`}
-                class="text-sm font-semibold leading-relaxed text-text-dark transition duration-300 hover:text-primary-dark"
+                href={postUrl(post)}
+                class="text-text-dark hover:text-primary-dark text-sm leading-relaxed font-semibold transition duration-300"
               >
                 {post.data.title}
               </a>
@@ -84,10 +78,10 @@ const featured = featuredIds
   }
 
   {/* 検索 */}
-  <div class="rounded-lg border border-border p-4">
+  <div class="border-border bg-surface rounded-lg border p-4">
     <label
       for="sidebar-search"
-      class="mb-3 block text-sm font-bold text-text-dark">記事を検索</label
+      class="text-text-dark mb-3 block text-sm font-bold">記事を検索</label
     >
     <form action="/search" method="get" class="flex gap-2">
       <input
@@ -100,7 +94,7 @@ const featured = featuredIds
       <button
         type="submit"
         aria-label="検索する"
-        class="flex min-h-[44px] w-11 shrink-0 items-center justify-center rounded-md bg-dark text-white transition duration-300 hover:bg-primary"
+        class="bg-primary hover:bg-primary-dark flex min-h-[44px] w-11 shrink-0 items-center justify-center rounded-md text-white transition duration-300"
       >
         <svg
           width="17"

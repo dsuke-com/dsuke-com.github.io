@@ -38,25 +38,21 @@ const services = [
     name: "X",
     label: "X でポストする",
     href: `https://twitter.com/intent/tweet/?text=${q.title}&url=${q.url}`,
-    bg: "#152035",
   },
   {
     name: "Facebook",
     label: "Facebook で共有する",
     href: `https://www.facebook.com/sharer/sharer.php?u=${q.url}`,
-    bg: "#2c4a86",
   },
   {
     name: "はてブ",
     label: "はてなブックマークに追加する",
     href: `https://b.hatena.ne.jp/entry/panel/?url=${q.url}&title=${q.title}`,
-    bg: "#00558a",
   },
   {
     name: "LINE",
     label: "LINE で送る",
     href: `https://social-plugins.line.me/lineit/share?url=${q.url}`,
-    bg: "#05892f",
   },
 ];
 
@@ -66,7 +62,9 @@ const compact = variant === "compact";
 <div class={className}>
   {
     heading && (
-      <p class="mb-3 text-sm font-bold tracking-wide text-text">{heading}</p>
+      <p class="text-text-muted mb-3 text-sm font-bold tracking-wide">
+        {heading}
+      </p>
     )
   }
   <ul class="flex flex-wrap gap-2">
@@ -78,8 +76,7 @@ const compact = variant === "compact";
             aria-label={s.label}
             target="_blank"
             rel="noreferrer noopener"
-            class={`flex min-h-[44px] items-center rounded-md font-bold text-white transition duration-300 hover:opacity-85 ${compact ? "px-3 text-xs" : "px-4 text-sm"}`}
-            style={{ backgroundColor: s.bg }}
+            class={`border-border bg-surface text-text-dark hover:border-primary hover:text-primary flex min-h-[44px] items-center rounded-md border font-bold transition duration-300 ${compact ? "px-3 text-xs" : "px-4 text-sm"}`}
           >
             {s.name}
           </a>
@@ -90,7 +87,7 @@ const compact = variant === "compact";
       <button
         type="button"
         data-copy-url={shareUrl}
-        class={`copy-link flex min-h-[44px] items-center rounded-md border border-border bg-white font-bold text-text-dark transition duration-300 hover:border-primary hover:text-primary-dark ${compact ? "px-3 text-xs" : "px-4 text-sm"}`}
+        class={`copy-link flex min-h-[44px] items-center rounded-md border border-border bg-surface font-bold text-text-dark transition duration-300 hover:border-primary hover:text-primary ${compact ? "px-3 text-xs" : "px-4 text-sm"}`}
       >
         <span class="copy-link-label">リンクをコピー</span>
       </button>

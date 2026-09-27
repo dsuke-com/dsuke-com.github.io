@@ -1,6 +1,7 @@
 {
   "site": {
-    "title": "dsuke.com",
+    "title": "ふたり暮らしの実録ノート",
+    "tagline": "結婚、旅、家。30代夫婦の暮らしの記録",
     "base_url": "https://dsuke-com.github.io",
     "base_path": "/",
     "trailing_slash": false,
@@ -8,7 +9,7 @@
     "logo": "",
     "logo_width": "200",
     "logo_height": "34",
-    "logo_text": "dsuke.com"
+    "logo_text": "ふたり暮らしの実録ノート"
   },
   "settings": {
     "pagination": 5
@@ -16,48 +17,50 @@
   "metadata": {
     "meta_author": "dsuke",
     "meta_image": "/images/og-image.png",
-    "meta_description": "古いマンションの住環境と寒さ対策について、実際に試して分かったことを記録しています。"
+    "meta_description": "30代夫婦のプロポーズ、結婚式、海外旅行、中古マンション購入、その後の暮らしを、費用や失敗も含めて記録するブログです。"
   },
   "google_tag_manager": {
     "enable": false,
     "gtm_id": ""
   },
   "params": {
-    "copyright": "© 2026 dsuke.com"
+    "copyright": "© 2026 ふたり暮らしの実録ノート",
+    "affiliate_notice": "この記事にはアフィリエイト広告が含まれています。",
+    "footer_affiliate_notice": "本サイトはアフィリエイトプログラムに参加しており、リンク経由での購入により紹介料を受け取ることがあります。"
   },
-  "pickup": [
+  "hero": {
+    "catchcopy": "結婚して、旅して、家を買った。",
+    "subcopy": "費用も、失敗も、そのとき考えたことも。あとで振り返れるように残します。",
+    "image": "",
+    "imageAlt": ""
+  },
+  "categories": [
     {
-      "title": "窓・サッシの断熱",
-      "description": "冷気の入口として最初に確認したい場所",
-      "url": "/tags/窓",
-      "icon": "window"
+      "name": "ふたりの節目",
+      "description": "プロポーズから親への挨拶、入籍、前撮り、結婚式まで。準備したことと、かかった費用を残しています。",
+      "icon": "rings"
     },
     {
-      "title": "断熱の考え方",
-      "description": "どこを断熱すると効くのかを整理する",
-      "url": "/tags/断熱",
-      "icon": "layers"
+      "name": "旅の記録",
+      "description": "夫婦2人での海外旅行の記録。日程、ホテル、移動、持ち物、現地で困ったことと費用をまとめています。",
+      "icon": "plane"
     },
     {
-      "title": "マンション特有の条件",
-      "description": "管理規約や構造による制約を踏まえる",
-      "url": "/tags/マンション",
-      "icon": "building"
+      "name": "家を買う",
+      "description": "中古マンションを買うまでの流れ。内見、住宅ローン、契約、諸費用、買ったあとの住み心地について。",
+      "icon": "key"
     },
     {
-      "title": "寒さ対策のまとめ",
-      "description": "原因の切り分けから対策までの全体像",
-      "url": "/categories/寒さ対策",
-      "icon": "thermometer"
+      "name": "家を整える",
+      "description": "住みはじめてからの工夫。寒さ・暑さ・結露の対策と、買ってよかったもの・要らなかったものの記録。",
+      "icon": "home"
     }
   ],
-  "featured_posts": [
-    "article-01-old-condo-cold-causes"
-  ],
+  "featured_posts": ["article-01-old-condo-cold-causes"],
   "author": {
     "name": "dsuke",
     "image": "",
-    "description": "古いマンションの住環境について、自分で試して分かったことを記録しています。"
+    "description": "30代の夫婦2人で暮らしています。結婚、海外旅行、中古マンションの購入と、その後の住まいの工夫を、かかった費用や失敗も含めて記録しています。"
   },
   "contactinfo": {
     "email": "hndfavodaismi@gmail.com"

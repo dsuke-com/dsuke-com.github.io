@@ -28,27 +28,31 @@ function parseFontString(fontStr) {
   return { name: cleanName, weights };
 }
 
-// Build fonts configuration from theme.json
-const fontsConfig = Object.entries(theme.fonts.font_family)
-  .filter(([key]) => !key.includes("_type")) // Filter out type entries
-  .map(([key, fontStr]) => {
-    const { name, weights } = parseFontString(fontStr);
-    const typeKey = `${key}_type`;
-    const fallback = theme.fonts.font_family[typeKey] || "sans-serif";
+// Build fonts configuration from theme.json.
+// use_system_fonts が true のときは端末のフォントだけを使うため、
+// リモートフォントの読み込みは行わない（日本語フォントは数MBになるため）。
+const fontsConfig = theme.fonts.use_system_fonts
+  ? []
+  : Object.entries(theme.fonts.font_family)
+      .filter(([key]) => !key.includes("_type")) // Filter out type entries
+      .map(([key, fontStr]) => {
+        const { name, weights } = parseFontString(fontStr);
+        const typeKey = `${key}_type`;
+        const fallback = theme.fonts.font_family[typeKey] || "sans-serif";
 
-    return {
-      name,
-      cssVariable: `--font-${key}`,
-      provider: fontProviders.google(),
-      weights,
-      display: "swap",
-      fallbacks: [fallback],
-    };
-  });
+        return {
+          name,
+          cssVariable: `--font-${key}`,
+          provider: fontProviders.google(),
+          weights,
+          display: "swap",
+          fallbacks: [fallback],
+        };
+      });
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://dsuke-com.github.io/',
+  site: "https://dsuke-com.github.io/",
   trailingSlash: config.site.trailing_slash ? "always" : "never",
   image: { service: sharpImageService() },
   vite: { plugins: [tailwindcss()] },
@@ -70,6 +74,14 @@ export default defineConfig({
         "@/shortcodes/Ranking.astro",
         "@/shortcodes/Item.astro",
         "@/shortcodes/Warning.astro",
+        // 手記・レビュー用
+        "@/shortcodes/AdDisclosure.astro",
+        "@/shortcodes/BuyLink.astro",
+        "@/shortcodes/ProductCard.astro",
+        "@/shortcodes/CostTable.astro",
+        "@/shortcodes/CompareTable.astro",
+        "@/shortcodes/Figure.astro",
+        "@/shortcodes/Gallery.astro",
       ],
     }),
     mdx(),

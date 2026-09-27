@@ -13,7 +13,10 @@ for (let i = 1; i <= totalPages; i++) {
 
 {
   totalPages > 1 && (
-    <nav class="mb-4 flex justify-center space-x-2 text-center" aria-label="ページ送り">
+    <nav
+      class="mb-4 flex justify-center space-x-2 text-center"
+      aria-label="ページ送り"
+    >
       {/* previous */}
       {hasPrevPage ? (
         <a
@@ -22,7 +25,7 @@ for (let i = 1; i <= totalPages; i++) {
               ? `${section ? "/" + section : "/"}`
               : `${section ? "/" + section : ""}/page/${currentPage - 1}`
           }
-          class="border border-primary hover:bg-primary hover:text-white rounded-md h-10 w-10 leading-[36px] font-semibold text-dark flex items-center justify-center transition duration-200"
+          class="border-primary hover:bg-primary text-text-dark flex h-10 w-10 items-center justify-center rounded-md border leading-[36px] font-semibold transition duration-200 hover:text-white"
         >
           <span class="sr-only">前のページ</span>
           <svg
@@ -40,7 +43,7 @@ for (let i = 1; i <= totalPages; i++) {
           </svg>
         </a>
       ) : (
-        <span class="border border-gray-400 opacity-40 rounded-md h-10 w-10 leading-[36px] font-semibold text-dark flex items-center justify-center pointer-events-none">
+        <span class="border-border text-text-dark pointer-events-none flex h-10 w-10 items-center justify-center rounded-md border leading-[36px] font-semibold opacity-50">
           <span class="sr-only">前のページ</span>
           <svg
             class="h-5 w-5"
@@ -63,7 +66,7 @@ for (let i = 1; i <= totalPages; i++) {
         pagination === currentPage ? (
           <span
             aria-current="page"
-            class={`border border-primary bg-primary rounded-md h-10 w-10 leading-[35px] font-semibold text-white`}
+            class={`border-primary bg-primary h-10 w-10 rounded-md border leading-[35px] font-semibold text-white`}
           >
             {pagination}
           </span>
@@ -74,19 +77,18 @@ for (let i = 1; i <= totalPages; i++) {
                 ? `${section ? "/" + section : "/"}`
                 : `${section ? "/" + section : ""}/page/${pagination}`
             }
-            aria-current="page"
-            class={`border border-primary hover:bg-primary hover:text-white rounded-md h-10 w-10 leading-[36px] font-semibold text-dark flex items-center justify-center transition duration-200`}
+            class={`border-primary hover:bg-primary text-text-dark flex h-10 w-10 items-center justify-center rounded-md border leading-[36px] font-semibold transition duration-200 hover:text-white`}
           >
             {pagination}
           </a>
-        )
+        ),
       )}
 
       {/* next page */}
       {hasNextPage ? (
         <a
           href={`${section ? "/" + section : ""}/page/${currentPage + 1}`}
-          class="border border-primary hover:bg-primary hover:text-white rounded-md h-10 w-10 leading-[36px] font-semibold text-dark flex items-center justify-center transition duration-200"
+          class="border-primary hover:bg-primary text-text-dark flex h-10 w-10 items-center justify-center rounded-md border leading-[36px] font-semibold transition duration-200 hover:text-white"
         >
           <span class="sr-only">次のページ</span>
           <svg
@@ -104,7 +106,7 @@ for (let i = 1; i <= totalPages; i++) {
           </svg>
         </a>
       ) : (
-        <span class="border border-gray-400 opacity-40 rounded-md h-10 w-10 leading-[36px] font-semibold text-dark flex items-center justify-center pointer-events-none">
+        <span class="border-border text-text-dark pointer-events-none flex h-10 w-10 items-center justify-center rounded-md border leading-[36px] font-semibold opacity-50">
           <span class="sr-only">次のページ</span>
           <svg
             class="h-5 w-5"
