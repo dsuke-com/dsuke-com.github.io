@@ -8,3 +8,5 @@ package-lock.json
 .sitepins
 public/sitepins-manifest.json
 public/.well-known
+# Google Search Console の所有権確認ファイル（1バイトでも変えると認証が通らない）
+public/google*.html

@@ -45,7 +45,7 @@ Claude Code で開発サーバーを起動するときは `astro dev --backgroun
 | `description` |      | 検索結果に出る説明文。120文字前後                                  |
 | `publishedAt` | ○    | 公開日時（`2026-01-01T09:00:00Z`）                                 |
 | `updatedAt`   |      | 更新日時。書き直したら更新する                                     |
-| `category`    | ○    | `ふたりの節目` / `旅の記録` / `家を買う` / `家を整える` から1つ    |
+| `category`    | ○    | `結婚` / `海外旅行` / `マンション購入` / `暮らしの工夫` から1つ    |
 | `tags`        |      | 自由。`["トルコ", "eSIM"]`                                         |
 | `eyecatch`    |      | 横長のアイキャッチ画像のパス（例 `/images/posts/01.jpg`）          |
 | `eyecatchAlt` |      | アイキャッチの代替テキスト                                         |
@@ -151,6 +151,31 @@ MDX / Markdown からそのまま書けます（import は不要）。
 - 淡い背景には必ず `--color-text`（#36312D）を載せる。この組み合わせはすべて WCAG AA（4.5:1）以上
 
 フォントは端末のものを使います（`fonts.use_system_fonts: true`）。見出しは明朝、本文はゴシックです。日本語のWebフォントは合計数MBになるため読み込んでいません。リモートフォントに戻す場合は `use_system_fonts` を `false` にしたうえで、`src/layouts/Base.astro` に `astro:assets` の `<Font>` を戻してください。
+
+## アクセス解析・所有権の確認
+
+すべて `src/config/config.json` で切り替えます。ID が空、または `enable: false` の間はスクリプトを一切出力しません。
+
+| キー                                         | 用途                                              |
+| -------------------------------------------- | ------------------------------------------------- |
+| `verification.google`                        | Search Console の所有権確認メタタグ。設定済み     |
+| `google_tag_manager.enable` / `gtm_id`       | GTM のコンテナスニペット（`GTM-XXXXXXX`）         |
+| `google_analytics.enable` / `measurement_id` | GA4 を gtag.js で直接入れる場合（`G-XXXXXXXXXX`） |
+
+**GTM 経由で GA4 を配信する場合、`google_analytics.enable` は `false` のままにしてください。**
+両方を有効にするとページビューが二重に計測されます。
+
+所有権の確認方法は3つ用意してあり、どれか1つが通れば構いません。
+
+1. HTMLファイル — `public/googlebd747d92c45bb1c8.html`
+2. HTMLタグ — `verification.google`（上記）
+3. GA または GTM — 下記のどちらかを有効にすると使えます
+
+> このサイトは `<ClientRouter />`（View Transitions）を使っているため、ページ遷移でスクリプトが再実行されません。
+> GA4 は自動のページビュー送信を切り、`astro:page-load` のたびに送るようにしています（`src/layouts/components/GoogleAnalytics.astro`）。
+> GTM 側は `astro-gtm-lite` が同等の処理をしています。
+
+計測を有効にしたら、`src/content/pages/privacy-policy.md` のアクセス解析の記述も実態に合わせてください。
 
 ## SEO
 

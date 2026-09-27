@@ -1,0 +1,38 @@
+---
+// Google アナリティクス（gtag.js）。
+// GTM 経由で GA4 を配信する場合はこちらを有効にしないこと（二重計測になる）。
+type Props = {
+  id: string;
+};
+
+const { id } = Astro.props;
+---
+
+<script
+  is:inline
+  async
+  src={`https://www.googletagmanager.com/gtag/js?id=${id}`}></script>
+<script is:inline define:vars={{ id }}>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    window.dataLayer.push(arguments);
+  }
+  window.gtag = gtag;
+  gtag("js", new Date());
+
+  // ClientRouter（View Transitions）を使っているため、ページを移動しても
+  // このスクリプトは再実行されない。自動のページビュー送信を切って、
+  // astro:page-load のたびに自分で送る。
+  gtag("config", id, { send_page_view: false });
+
+  // 万一スクリプトが再実行されても、リスナーが二重登録されないようにする
+  if (!window.__gaPageViewBound) {
+    window.__gaPageViewBound = true;
+    document.addEventListener("astro:page-load", () => {
+      gtag("event", "page_view", {
+        page_title: document.title,
+        page_location: location.href,
+      });
+    });
+  }
+</script>

@@ -2,6 +2,7 @@
 import TwSizeIndicator from "@/components/TwSizeIndicator.astro";
 import config from "@/config/config.json";
 import { plainify } from "@/lib/utils/textConverter";
+import GoogleAnalytics from "@/components/GoogleAnalytics.astro";
 import Footer from "@/partials/Footer.astro";
 import Header from "@/partials/Header.astro";
 import "@/styles/main.css";
@@ -47,6 +48,15 @@ const pageDescription = plainify(
   description || config.metadata.meta_description,
 );
 const ogImage = new URL(image || config.metadata.meta_image, siteUrl).href;
+
+// 所有権確認用のメタタグ（Search Console など）。値が空なら出力しない。
+const googleVerification = config.verification?.google ?? "";
+
+// GA4 を gtag.js で直接入れる場合。GTM 経由で GA4 を配信するときは
+// config.json の google_analytics.enable を false のままにする（二重計測になる）。
+const gaId = config.google_analytics?.enable
+  ? config.google_analytics.measurement_id
+  : "";
 ---
 
 <!doctype html>
@@ -90,6 +100,13 @@ const ogImage = new URL(image || config.metadata.meta_image, siteUrl).href;
 
     <!-- noindex robots -->
     {noindex && <meta name="robots" content="noindex,nofollow" />}
+
+    <!-- 所有権の確認 -->
+    {
+      googleVerification && (
+        <meta name="google-site-verification" content={googleVerification} />
+      )
+    }
 
     <!-- meta-description -->
     <meta name="description" content={pageDescription} />
@@ -137,6 +154,8 @@ const ogImage = new URL(image || config.metadata.meta_image, siteUrl).href;
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={pageDescription} />
     <meta name="twitter:image" content={ogImage} />
+
+    {gaId && <GoogleAnalytics id={gaId} />}
 
     <slot name="head" />
   </head>
