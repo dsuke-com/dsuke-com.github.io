@@ -45,7 +45,7 @@ Claude Code で開発サーバーを起動するときは `astro dev --backgroun
 | `description` |      | 検索結果に出る説明文。120文字前後                                  |
 | `publishedAt` | ○    | 公開日時（`2026-01-01T09:00:00Z`）                                 |
 | `updatedAt`   |      | 更新日時。書き直したら更新する                                     |
-| `category`    | ○    | `結婚` / `海外旅行` / `マンション購入` / `暮らしの工夫` から1つ    |
+| `category`    | ○    | `結婚` / `旅行` / `マンション購入` / `暮らしの工夫` から1つ        |
 | `tags`        |      | 自由。`["トルコ", "eSIM"]`                                         |
 | `eyecatch`    |      | 横長のアイキャッチ画像のパス（例 `/images/posts/01.jpg`）          |
 | `eyecatchAlt` |      | アイキャッチの代替テキスト                                         |
@@ -55,7 +55,6 @@ Claude Code で開発サーバーを起動するときは `astro dev --backgroun
 | `tripDate`    |      | 旅行・イベントの時期。記事冒頭のまとめに出る                       |
 | `location`    |      | 場所。同上                                                         |
 | `totalCost`   |      | 総額（円、数値）。同上                                             |
-| `readingTime` |      | 読了目安（分）。未指定でも構わない                                 |
 
 カテゴリーは `src/config/config.json` の `categories` が正です。ここに書いたカテゴリーは、記事が0本でも一覧ページとカテゴリーページが用意されます。増やすときはこの配列に足してください。
 
@@ -118,12 +117,12 @@ MDX / Markdown からそのまま書けます（import は不要）。
 
 ## 設定ファイル
 
-| ファイル                 | 内容                                                                       |
-| ------------------------ | -------------------------------------------------------------------------- |
-| `src/config/config.json` | サイト名、説明、カテゴリー定義、トップのキャッチコピー、著者情報、注目記事 |
-| `src/config/menu.json`   | ヘッダー・フッターのメニュー                                               |
-| `src/config/theme.json`  | 配色とフォント                                                             |
-| `src/config/social.json` | SNSリンク（空なら非表示）                                                  |
+| ファイル                 | 内容                                                                                      |
+| ------------------------ | ----------------------------------------------------------------------------------------- |
+| `src/config/config.json` | サイト名、説明、カテゴリー定義、トップのキャッチコピーと写真、著者情報、注目記事、解析ID  |
+| `src/config/menu.json`   | ヘッダー・フッターのメニュー。`"childrenFrom": "categories"` はカテゴリーのドロップダウン |
+| `src/config/theme.json`  | 配色とフォント                                                                            |
+| `src/config/social.json` | SNSリンク（空なら非表示）                                                                 |
 
 ### 配色（暮らしの手帖）
 
@@ -159,8 +158,8 @@ MDX / Markdown からそのまま書けます（import は不要）。
 | キー                                         | 用途                                              |
 | -------------------------------------------- | ------------------------------------------------- |
 | `verification.google`                        | Search Console の所有権確認メタタグ。設定済み     |
-| `google_tag_manager.enable` / `gtm_id`       | GTM のコンテナスニペット（`GTM-XXXXXXX`）         |
-| `google_analytics.enable` / `measurement_id` | GA4 を gtag.js で直接入れる場合（`G-XXXXXXXXXX`） |
+| `google_tag_manager.enable` / `gtm_id`       | GTM のコンテナスニペット（`GTM-XXXXXXX`）。未使用 |
+| `google_analytics.enable` / `measurement_id` | GA4（gtag.js）。`G-EJZ5XP99L3` を設定済み・有効   |
 
 **GTM 経由で GA4 を配信する場合、`google_analytics.enable` は `false` のままにしてください。**
 両方を有効にするとページビューが二重に計測されます。
@@ -169,13 +168,13 @@ MDX / Markdown からそのまま書けます（import は不要）。
 
 1. HTMLファイル — `public/googlebd747d92c45bb1c8.html`
 2. HTMLタグ — `verification.google`（上記）
-3. GA または GTM — 下記のどちらかを有効にすると使えます
+3. GA または GTM — GA4 を有効にしてあるので、この方法でも確認できます
 
 > このサイトは `<ClientRouter />`（View Transitions）を使っているため、ページ遷移でスクリプトが再実行されません。
 > GA4 は自動のページビュー送信を切り、`astro:page-load` のたびに送るようにしています（`src/layouts/components/GoogleAnalytics.astro`）。
 > GTM 側は `astro-gtm-lite` が同等の処理をしています。
 
-計測を有効にしたら、`src/content/pages/privacy-policy.md` のアクセス解析の記述も実態に合わせてください。
+計測を有効／無効にしたら、`src/content/pages/privacy-policy.md` のアクセス解析の記述も実態に合わせてください。
 
 ## SEO
 

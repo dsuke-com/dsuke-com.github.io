@@ -67,8 +67,6 @@ const postsCollection = defineCollection({
       location: z.string().optional(),
       // 円。記事冒頭のサマリーに「総額」として出す
       totalCost: z.number().optional(),
-      // 分。未指定なら本文の文字数から概算する
-      readingTime: z.number().optional(),
 
       // 旧フィールド（過去の記事との互換用。新規記事では使わない）
       date: z.coerce.date().optional(),

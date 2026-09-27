@@ -22,12 +22,9 @@ const Heading = headingLevel;
 ---
 
 <section class={className} aria-labelledby="category-nav-heading">
-  <div class="mb-6 flex items-center gap-3">
-    <span aria-hidden="true" class="bg-apricot h-[22px] w-[4px] rounded"></span>
-    <Heading id="category-nav-heading" class="h4 text-text-dark">
-      {title}
-    </Heading>
-  </div>
+  <Heading id="category-nav-heading" class="section-label mb-6">
+    {title}
+  </Heading>
 
   <ul class="row gy-4 gx-4 list-none">
     {
@@ -60,9 +57,6 @@ const Heading = headingLevel;
               </span>
             </span>
             <span class="text-text-dark font-bold">{category.name}</span>
-            <span class="text-text-muted text-sm leading-relaxed">
-              {category.description}
-            </span>
           </a>
         </li>
       ))

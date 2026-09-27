@@ -29,7 +29,8 @@ const sortedPosts = sortByDate(taxonomyFilter(posts, "categories", category));
 const meta = getSiteCategories(posts).find((c) => c.slug === category);
 
 const title = meta?.name ?? humanize(category || "");
-const description = meta?.description ?? `${title}に関する記事の一覧です。`;
+// 画面には出さないが、検索結果用に1文だけ用意する
+const description = `${title}についての記事の一覧です。`;
 ---
 
 <Base title={title} description={description}>
@@ -42,13 +43,12 @@ const description = meta?.description ?? `${title}に関する記事の一覧で
           <header class="border-border mb-10 border-b pb-8">
             <p class="text-primary mb-2 text-sm font-semibold">カテゴリー</p>
             <h1 class="h3 mb-4">{title}</h1>
-            <p class="text-text-muted mb-4 leading-loose">{description}</p>
             <p class="text-text-muted text-sm">{sortedPosts.length}記事</p>
           </header>
 
           {
             sortedPosts.length > 0 ? (
-              <Posts posts={sortedPosts} fluid={false} />
+              <Posts posts={sortedPosts} />
             ) : (
               <p class="border-border bg-surface text-text-muted rounded-lg border border-dashed p-8 text-center leading-loose">
                 このカテゴリーの記事はまだありません。

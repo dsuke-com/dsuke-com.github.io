@@ -24,16 +24,44 @@
   @apply text-dark hover:text-primary-dark p-3 text-base font-semibold transition md:p-4;
 }
 
-.nav-dropdown-list {
-  @apply border-border bg-surface z-10 rounded-lg border px-6 py-3 shadow transition;
+.nav-dropdown {
+  @apply relative;
 }
 
-.nav-dropdown-item {
-  @apply mb-1;
+/* 開閉ボタンは見た目を他のリンクに揃える */
+.nav-dropdown-toggle {
+  @apply inline-flex cursor-pointer items-center gap-1;
+}
+
+.nav-dropdown-caret {
+  @apply transition-transform duration-200;
+}
+
+.nav-dropdown-toggle[aria-expanded="true"] .nav-dropdown-caret {
+  @apply rotate-180;
+}
+
+/* モバイルではその場で開く。md 以上ではメニューに重ねて出す。 */
+.nav-dropdown-list {
+  @apply border-border bg-surface z-20 rounded-lg border px-4 py-2;
+}
+
+.nav-dropdown-list[hidden] {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .nav-dropdown-list {
+    @apply absolute top-full left-1/2 -translate-x-1/2 px-5 py-3 shadow;
+  }
+}
+
+.nav-dropdown-item + .nav-dropdown-item {
+  @apply border-border border-t;
 }
 
 .nav-dropdown-link {
-  @apply text-dark hover:text-primary-dark block min-w-[150px] py-1 text-[17px] font-semibold transition;
+  @apply text-text-dark hover:text-primary flex min-h-[44px] min-w-[170px] items-center justify-center font-semibold transition md:justify-start;
 }
 
 /* search style */

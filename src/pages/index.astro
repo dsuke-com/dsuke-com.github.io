@@ -1,9 +1,9 @@
 ---
 import CategoryNav from "@/components/CategoryNav.astro";
 import Hero from "@/components/Hero.astro";
+import PostFilter from "@/components/PostFilter.astro";
 import Posts from "@/components/Posts.astro";
 import Sidebar from "@/components/Sidebar.astro";
-import SiteIntro from "@/components/SiteIntro.astro";
 import config from "@/config/config.json";
 import Base from "@/layouts/Base.astro";
 import Pagination from "@/layouts/components/Pagination.astro";
@@ -64,12 +64,13 @@ const featuredPosts = featuredIds
     <div class="container">
       <div class="row gx-5">
         <div class="lg:col-8">
-          <div class="mb-6 flex items-center gap-3">
-            <span aria-hidden="true" class="bg-apricot h-[22px] w-[4px] rounded"
-            ></span>
-            <h2 class="h4 text-text-dark">最新の記事</h2>
+          <div data-post-filter>
+            <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+              <h2 class="section-label">最新の記事</h2>
+              <PostFilter posts={currentPosts} />
+            </div>
+            <Posts posts={currentPosts} className="mb-10" />
           </div>
-          <Posts posts={currentPosts} className="mb-10" />
           <Pagination currentPage={1} totalPages={totalPages} />
 
           {
@@ -78,7 +79,7 @@ const featuredPosts = featuredIds
                 {categorySections.map((category) => (
                   <section aria-labelledby={`cat-${category.slug}`}>
                     <div class="mb-5 flex flex-wrap items-baseline justify-between gap-3">
-                      <h2 id={`cat-${category.slug}`} class="h5 text-text-dark">
+                      <h2 id={`cat-${category.slug}`} class="section-label">
                         {category.name}
                       </h2>
                       <a
@@ -89,10 +90,7 @@ const featuredPosts = featuredIds
                         <span class="sr-only">（{category.count}記事）</span>
                       </a>
                     </div>
-                    <p class="text-text-muted mb-6 text-sm leading-relaxed">
-                      {category.description}
-                    </p>
-                    <Posts posts={category.posts} fluid={false} />
+                    <Posts posts={category.posts} />
                   </section>
                 ))}
               </div>
@@ -102,16 +100,10 @@ const featuredPosts = featuredIds
           {
             featuredPosts.length > 0 && (
               <section class="mt-16" aria-labelledby="featured-heading">
-                <div class="mb-6 flex items-center gap-3">
-                  <span
-                    aria-hidden="true"
-                    class="bg-apricot h-[22px] w-[4px] rounded"
-                  />
-                  <h2 id="featured-heading" class="h4 text-text-dark">
-                    よく読まれている記事
-                  </h2>
-                </div>
-                <Posts posts={featuredPosts} fluid={false} />
+                <h2 id="featured-heading" class="section-label mb-6">
+                  よく読まれている記事
+                </h2>
+                <Posts posts={featuredPosts} />
               </section>
             )
           }
@@ -123,10 +115,37 @@ const featuredPosts = featuredIds
       </div>
     </div>
   </section>
-
-  <section class="section pt-0">
-    <div class="container">
-      <SiteIntro />
-    </div>
-  </section>
 </Base>
+
+<script>
+  // カテゴリーチップで記事カードを絞り込む。
+  // ClientRouter で DOM が入れ替わるため astro:page-load で張り直し、
+  // data-bound で二重登録（1クリックで元に戻る）を防ぐ。
+  function setupPostFilters() {
+    document
+      .querySelectorAll<HTMLElement>("[data-post-filter]")
+      .forEach((root) => {
+        if (root.dataset.bound === "true") return;
+        root.dataset.bound = "true";
+
+        const chips =
+          root.querySelectorAll<HTMLButtonElement>(".post-filter-chip");
+        const cards = root.querySelectorAll<HTMLElement>(".post-card-col");
+
+        chips.forEach((chip) => {
+          chip.addEventListener("click", () => {
+            const filter = chip.dataset.filter ?? "";
+            chips.forEach((c) =>
+              c.setAttribute("aria-pressed", String(c === chip)),
+            );
+            cards.forEach((card) => {
+              const match = !filter || card.dataset.category === filter;
+              card.toggleAttribute("hidden", !match);
+            });
+          });
+        });
+      });
+  }
+
+  document.addEventListener("astro:page-load", setupPostFilters);
+</script>

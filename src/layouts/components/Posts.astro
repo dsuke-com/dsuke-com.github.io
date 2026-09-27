@@ -1,104 +1,64 @@
 ---
 import dateFormat from "@/lib/utils/dateFormat";
 import postUrl from "@/lib/utils/postUrl";
-import { humanize, plainify, slugify } from "@/lib/utils/textConverter";
+import { slugify } from "@/lib/utils/textConverter";
 import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
 
 type Props = {
   posts: CollectionEntry<"posts">[];
   className?: string;
-  // 1本目を全幅で大きく見せるか（既定: 見せる）
-  fluid?: boolean;
   // サイドバーがある画面では 2 列、ない画面では 3 列にできる
   columns?: 2 | 3;
 };
 
-const { className, posts, fluid, columns = 2 } = Astro.props;
+const { className = "", posts, columns = 2 } = Astro.props;
 
-// 1本しかないときに半幅で置くと余白が大きく空いて落ち着かないので全幅にする
 const colClass =
   posts.length === 1
-    ? "col-12"
+    ? "col-12 sm:col-6"
     : columns === 3
       ? "col-12 sm:col-6 lg:col-4"
       : "col-12 sm:col-6";
 ---
 
-<div
-  class={`row gy-5 gx-4 ${className} ${posts.length == 1 ? "justify-center" : ""} `}
->
+<div class={`row gy-5 gx-4 ${className}`}>
   {
-    posts.map((post, i: number) => {
-      const isLead = i === 0 && fluid !== false;
+    posts.map((post) => {
+      const url = postUrl(post);
+      const category = post.data.categories?.[0];
       return (
-        <div class={isLead ? "col-12" : colClass}>
-          <article class="border-border bg-surface flex h-full flex-col overflow-hidden rounded-lg border p-5">
-            {post.data.image && (
-              <a
-                href={postUrl(post)}
-                class="group hover:text-primary-dark -mx-5 -mt-5 block overflow-hidden"
-              >
-                <Image
-                  class="w-full transition duration-300 group-hover:scale-[1.03]"
-                  src={post.data.image}
-                  alt={post.data.title}
-                  width={isLead ? 925 : 445}
-                  height={isLead ? 475 : 230}
-                />
-              </a>
-            )}
-            <div
-              class={`text-text-muted flex flex-wrap items-center gap-x-3 gap-y-1 text-sm ${post.data.image ? "mt-5" : ""} mb-3`}
-            >
-              {post.data.categories.map((category) => (
-                <a
-                  href={`/categories/${slugify(category)}`}
-                  class="text-primary-dark font-semibold transition duration-300 hover:underline"
-                >
-                  {humanize(category)}
-                </a>
-              ))}
-              {post.data.date && (
-                <>
-                  <span aria-hidden="true" class="text-text-light">
-                    ·
-                  </span>
-                  <span>{dateFormat(post.data.date)}</span>
-                </>
-              )}
-            </div>
-            <h3 class={isLead ? "h4 mb-3" : "h5 mb-3"}>
-              <a
-                href={postUrl(post)}
-                class="hover:text-primary-dark block transition duration-300"
-              >
-                {post.data.title}
-              </a>
-            </h3>
-            <p class="text-text-muted mb-4 line-clamp-3">
-              {post.data.description || plainify(post.body ?? "")}
-            </p>
-            <a
-              href={postUrl(post)}
-              class="hover:text-primary-dark mt-auto inline-flex min-h-[44px] items-center gap-2 self-start text-sm font-bold transition duration-300"
-            >
-              {/* 「続きを読む」だけではリンク先が分からないため、
-                  読み上げと検索エンジン向けに記事名を添える */}
-              続きを読む<span class="sr-only">：{post.data.title}</span>
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.4"
-                stroke-linecap="round"
-                aria-hidden="true"
-              >
-                <path d="M5 12h13" />
-                <path d="M12 5l7 7-7 7" />
-              </svg>
+        <div
+          class={`post-card-col ${colClass}`}
+          data-category={category ? slugify(category) : ""}
+        >
+          <article class="post-card">
+            <a href={url} class="post-card-link">
+              <span class="post-card-media">
+                {post.data.image ? (
+                  <Image
+                    src={post.data.image}
+                    alt={post.data.eyecatchAlt || post.data.title}
+                    width={640}
+                    height={400}
+                    loading="lazy"
+                  />
+                ) : (
+                  /* 写真がない記事は、無関係な画像を当てずに無地の面で置く */
+                  <span class="post-card-noimage" />
+                )}
+              </span>
+              <span class="post-card-body">
+                <h3 class="post-card-title">{post.data.title}</h3>
+                {post.data.date && (
+                  <time
+                    class="post-card-date"
+                    datetime={post.data.date.toISOString()}
+                  >
+                    {dateFormat(post.data.date, "yyyy.MM.dd")}
+                  </time>
+                )}
+              </span>
             </a>
           </article>
         </div>
@@ -106,3 +66,82 @@ const colClass =
     })
   }
 </div>
+
+<style>
+  /* 絞り込みで hidden を付けたときに確実に消す */
+  .post-card-col[hidden] {
+    display: none;
+  }
+
+  .post-card {
+    height: 100%;
+    overflow: hidden;
+    border-radius: 0.625rem;
+    background-color: var(--color-surface);
+    /* 枠線ではなく淡い影で浮かせる。強い影は使わない */
+    box-shadow:
+      0 1px 2px rgb(54 49 45 / 5%),
+      0 10px 24px rgb(54 49 45 / 5%);
+    transition: box-shadow 0.25s ease;
+  }
+
+  .post-card:hover {
+    box-shadow:
+      0 1px 2px rgb(54 49 45 / 7%),
+      0 14px 30px rgb(54 49 45 / 9%);
+  }
+
+  /* カード全体を1つのリンクにする */
+  .post-card-link {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    text-decoration: none;
+  }
+
+  .post-card-media {
+    display: block;
+    line-height: 0;
+  }
+
+  .post-card-media img,
+  .post-card-noimage {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+  }
+
+  .post-card-noimage {
+    background-color: #ede5da;
+  }
+
+  .post-card-body {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    padding: 1.25rem 1.5rem 1.375rem;
+  }
+
+  .post-card-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.75;
+    color: var(--color-text-dark);
+  }
+
+  .post-card-link:hover .post-card-title {
+    color: var(--color-primary);
+  }
+
+  /* 作成日はカードの右下に置く。
+     タイトルの長さが違っても位置が揃うよう下端に寄せ、間に余白を取る。 */
+  .post-card-date {
+    align-self: flex-end;
+    margin-top: auto;
+    padding-top: 1.5rem;
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+  }
+</style>

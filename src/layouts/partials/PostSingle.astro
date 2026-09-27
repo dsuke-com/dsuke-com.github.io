@@ -34,7 +34,6 @@ const {
   tripDate,
   location,
   totalCost,
-  readingTime,
 } = post.data;
 
 // 前後の記事：公開日の新しい順に並べたときの隣
@@ -86,16 +85,6 @@ const next =
                       {dateFormat(updated)}
                     </time>
                   </span>
-                </>
-              )
-            }
-            {
-              readingTime && (
-                <>
-                  <span aria-hidden="true" class="text-border">
-                    ·
-                  </span>
-                  <span>約{readingTime}分</span>
                 </>
               )
             }

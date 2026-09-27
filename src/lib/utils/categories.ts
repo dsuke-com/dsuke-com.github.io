@@ -5,7 +5,6 @@ export type SiteCategory = {
   name: string;
   slug: string;
   url: string;
-  description: string;
   icon?: string;
   count: number;
 };
@@ -21,25 +20,11 @@ export const getSiteCategories = (posts: PostLike[]): SiteCategory[] =>
       name: category.name,
       slug,
       url: `/categories/${slug}`,
-      description: category.description,
       icon: category.icon,
       count: posts.filter((post) =>
         (post.data.categories ?? []).some((c) => slugify(c) === slug),
       ).length,
     };
   });
-
-export const findSiteCategory = (slug: string): SiteCategory | undefined => {
-  const category = config.categories.find((c) => slugify(c.name) === slug);
-  if (!category) return undefined;
-  return {
-    name: category.name,
-    slug,
-    url: `/categories/${slug}`,
-    description: category.description,
-    icon: category.icon,
-    count: 0,
-  };
-};
 
 export default getSiteCategories;

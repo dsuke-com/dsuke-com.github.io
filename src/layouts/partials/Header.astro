@@ -4,6 +4,8 @@ import Social from "@/components/Social.astro";
 import config from "@/config/config.json";
 import menu from "@/config/menu.json";
 import social from "@/config/social.json";
+import { getSinglePage } from "@/lib/contentParser.astro";
+import { getSiteCategories } from "@/lib/utils/categories";
 import { IoSearch } from "react-icons/io5";
 
 export interface ChildNavigationLink {
@@ -13,12 +15,26 @@ export interface ChildNavigationLink {
 
 export interface NavigationLink {
   name: string;
-  url: string;
-  hasChildren?: boolean;
+  url?: string;
+  // "categories" を指定すると config.json のカテゴリーが子項目になる
+  childrenFrom?: string;
   children?: ChildNavigationLink[];
 }
 
-const { main }: { main: NavigationLink[] } = menu;
+const posts = await getSinglePage("posts");
+const categoryLinks = getSiteCategories(posts).map((c) => ({
+  name: c.name,
+  url: c.url,
+}));
+
+// メニュー定義に childrenFrom があれば、その場で子項目を埋める。
+// カテゴリーを増やしてもメニューを直さなくて済むようにしている。
+const main: NavigationLink[] = (menu.main as NavigationLink[]).map((item) =>
+  item.childrenFrom === "categories"
+    ? { ...item, children: categoryLinks }
+    : item,
+);
+
 const hasSocial = Array.isArray(social.main) && social.main.length > 0;
 ---
 
@@ -82,39 +98,50 @@ const hasSocial = Array.isArray(social.main) && social.main.length > 0;
         class="navbar-nav order-3 hidden w-full md:order-1 md:flex md:w-auto md:items-center md:justify-center"
       >
         {
-          main.map((item) => (
-            <>
-              {item.hasChildren ? (
-                <li class="nav-item nav-dropdown group relative cursor-pointer">
-                  <span class="nav-link inline-flex items-center">
-                    {item.name}
-                    <svg
-                      class="h-5 w-5 fill-current"
-                      viewBox="0 0 20 20"
-                      aria-hidden="true"
-                    >
-                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                    </svg>
-                  </span>
-                  <ul class="nav-dropdown-list hidden group-hover:block md:invisible md:absolute md:block md:opacity-0 md:group-hover:visible md:group-hover:opacity-100">
-                    {item.children?.map((child) => (
-                      <li class="nav-dropdown-item">
-                        <a href={child.url} class="nav-dropdown-link">
-                          {child.name}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              ) : (
-                <li class="nav-item">
-                  <a href={item.url} class="nav-link block">
-                    {item.name}
-                  </a>
-                </li>
-              )}
-            </>
-          ))
+          main.map((item, i) =>
+            item.children ? (
+              <li class="nav-item nav-dropdown">
+                {/* クリックで開閉する。hover だけだとタッチ端末で開けないため */}
+                <button
+                  type="button"
+                  class="nav-link nav-dropdown-toggle"
+                  aria-expanded="false"
+                  aria-controls={`nav-dropdown-${i}`}
+                >
+                  {item.name}
+                  <svg
+                    class="nav-dropdown-caret"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </button>
+                <ul id={`nav-dropdown-${i}`} class="nav-dropdown-list" hidden>
+                  {item.children.map((child) => (
+                    <li class="nav-dropdown-item">
+                      <a href={child.url} class="nav-dropdown-link">
+                        {child.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ) : (
+              <li class="nav-item">
+                <a href={item.url} class="nav-link block">
+                  {item.name}
+                </a>
+              </li>
+            ),
+          )
         }
         {/* 検索：md以上ではメニューの末尾に並べる */}
         <li class="nav-item hidden md:block">
@@ -143,3 +170,61 @@ const hasSocial = Array.isArray(social.main) && social.main.length > 0;
     </nav>
   </div>
 </header>
+
+<script>
+  // カテゴリーのドロップダウン。
+  // ClientRouter でページを移動すると DOM が入れ替わるので astro:page-load で組み直す。
+  // 同じ要素に二度リスナーを付けると、1クリックで開いて即閉じてしまうため
+  // ボタン側は data 属性、document 側は window のフラグで二重登録を防ぐ。
+  function setupNavDropdowns() {
+    const toggles = document.querySelectorAll<HTMLButtonElement>(
+      ".nav-dropdown-toggle",
+    );
+
+    const closeAll = (except?: Element) => {
+      document
+        .querySelectorAll<HTMLButtonElement>(".nav-dropdown-toggle")
+        .forEach((t) => {
+          if (t === except) return;
+          t.setAttribute("aria-expanded", "false");
+          document
+            .getElementById(t.getAttribute("aria-controls") ?? "")
+            ?.setAttribute("hidden", "");
+        });
+    };
+
+    toggles.forEach((toggle) => {
+      if (toggle.dataset.bound === "true") return;
+      const list = document.getElementById(
+        toggle.getAttribute("aria-controls") ?? "",
+      );
+      if (!list) return;
+      toggle.dataset.bound = "true";
+
+      toggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const open = toggle.getAttribute("aria-expanded") === "true";
+        closeAll(toggle);
+        toggle.setAttribute("aria-expanded", String(!open));
+        list.toggleAttribute("hidden", open);
+      });
+    });
+
+    if (!window.__navDropdownDocBound) {
+      window.__navDropdownDocBound = true;
+      // 外側クリックと Escape で閉じる。
+      // ただしドロップダウン内のリンクを押したときは閉じない。
+      // ここで hidden を付けると ClientRouter の画面遷移が途中で止まる。
+      document.addEventListener("click", (e) => {
+        const target = e.target as Element | null;
+        if (target?.closest?.(".nav-dropdown-list")) return;
+        closeAll();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeAll();
+      });
+    }
+  }
+
+  document.addEventListener("astro:page-load", setupNavDropdowns);
+</script>

@@ -286,3 +286,10 @@ footer p a {
   left: 0;
   top: 0;
 }
+
+/* 節の見出しラベル。大きな見出しを置かず、小さく字間を空けて示す */
+.section-label {
+  @apply text-primary font-primary text-[0.8125rem] font-bold;
+  margin: 0;
+  letter-spacing: 0.14em;
+}
