@@ -30,6 +30,10 @@
     "enable": true,
     "measurement_id": "G-EJZ5XP99L3"
   },
+  "google_adsense": {
+    "enable": true,
+    "client": "ca-pub-1222742211831748"
+  },
   "params": {
     "copyright": "© 2026 ふたり暮らしの実録ノート",
     "affiliate_notice": "この記事にはアフィリエイト広告が含まれています。",

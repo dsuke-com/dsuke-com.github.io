@@ -2,6 +2,7 @@
 import TwSizeIndicator from "@/components/TwSizeIndicator.astro";
 import config from "@/config/config.json";
 import { plainify } from "@/lib/utils/textConverter";
+import GoogleAdsense from "@/components/GoogleAdsense.astro";
 import GoogleAnalytics from "@/components/GoogleAnalytics.astro";
 import Footer from "@/partials/Footer.astro";
 import Header from "@/partials/Header.astro";
@@ -56,6 +57,11 @@ const googleVerification = config.verification?.google ?? "";
 // config.json の google_analytics.enable を false のままにする（二重計測になる）。
 const gaId = config.google_analytics?.enable
   ? config.google_analytics.measurement_id
+  : "";
+
+// AdSense のサイト運営者ID（ca-pub-...）
+const adsenseClient = config.google_adsense?.enable
+  ? config.google_adsense.client
   : "";
 ---
 
@@ -156,6 +162,7 @@ const gaId = config.google_analytics?.enable
     <meta name="twitter:image" content={ogImage} />
 
     {gaId && <GoogleAnalytics id={gaId} />}
+    {adsenseClient && <GoogleAdsense client={adsenseClient} />}
 
     <slot name="head" />
   </head>

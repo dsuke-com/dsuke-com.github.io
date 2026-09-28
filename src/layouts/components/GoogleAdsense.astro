@@ -1,0 +1,19 @@
+---
+// Google AdSense。ID は config.json の google_adsense.client 一箇所だけで持つ。
+//
+// AdSense の所有権確認は「コードスニペット」「ads.txt」「メタタグ」の
+// どれか1つで足りるが、どれを見に来ても通るよう両方出しておく。
+// ads.txt（public/ads.txt）は確認とは別に収益化のために必要なので必ず残す。
+type Props = {
+  client: string;
+};
+
+const { client } = Astro.props;
+---
+
+<meta name="google-adsense-account" content={client} />
+<script
+  is:inline
+  async
+  src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${client}`}
+  crossorigin="anonymous"></script>

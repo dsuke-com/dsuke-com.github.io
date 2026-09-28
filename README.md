@@ -155,11 +155,12 @@ MDX / Markdown からそのまま書けます（import は不要）。
 
 すべて `src/config/config.json` で切り替えます。ID が空、または `enable: false` の間はスクリプトを一切出力しません。
 
-| キー                                         | 用途                                              |
-| -------------------------------------------- | ------------------------------------------------- |
-| `verification.google`                        | Search Console の所有権確認メタタグ。設定済み     |
-| `google_tag_manager.enable` / `gtm_id`       | GTM のコンテナスニペット（`GTM-XXXXXXX`）。未使用 |
-| `google_analytics.enable` / `measurement_id` | GA4（gtag.js）。`G-EJZ5XP99L3` を設定済み・有効   |
+| キー                                         | 用途                                                                                         |
+| -------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `verification.google`                        | Search Console の所有権確認メタタグ。設定済み                                                |
+| `google_tag_manager.enable` / `gtm_id`       | GTM のコンテナスニペット（`GTM-XXXXXXX`）。未使用                                            |
+| `google_analytics.enable` / `measurement_id` | GA4（gtag.js）。`G-EJZ5XP99L3` を設定済み・有効                                              |
+| `google_adsense.enable` / `client`           | Google AdSense。`ca-pub-1222742211831748` を設定済み・有効。スニペットとメタタグの両方を出力 |
 
 **GTM 経由で GA4 を配信する場合、`google_analytics.enable` は `false` のままにしてください。**
 両方を有効にするとページビューが二重に計測されます。
@@ -174,7 +175,10 @@ MDX / Markdown からそのまま書けます（import は不要）。
 > GA4 は自動のページビュー送信を切り、`astro:page-load` のたびに送るようにしています（`src/layouts/components/GoogleAnalytics.astro`）。
 > GTM 側は `astro-gtm-lite` が同等の処理をしています。
 
-計測を有効／無効にしたら、`src/content/pages/privacy-policy.md` のアクセス解析の記述も実態に合わせてください。
+計測や広告を有効／無効にしたら、`src/content/pages/privacy-policy.md` の記述も実態に合わせてください。
+
+AdSense の `ads.txt` は `public/ads.txt` に置いています。ドメインを変えても中身は変わりませんが、
+AdSense の管理画面が表示する内容と一致しているか確認してください。
 
 ## SEO
 
